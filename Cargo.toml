@@ -1,0 +1,6 @@
+[package]
+name = "vc-cache"
+version = "0.1.0"
+authors = ["russoturisto <russoturisto@gmail.com>"]
+
+[dependencies]
