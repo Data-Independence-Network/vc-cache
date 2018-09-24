@@ -1,8 +1,21 @@
 use std::thread;
 use tokio::net::{TcpStream, TcpListener};
 use std::sync::Arc;
+use tokio_codec::Framed;
+use tokio::prelude::*;
 
 
+pub struct App<T: 'static + Context + Send> {
+//    pub _route_parser: RouteParser<T>,
+    ///
+    /// Generate context is common to all `App`s. It's the function that's called upon receiving a request
+    /// that translates an acutal `Request` struct to your custom Context type. It should be noted that
+    /// the context_generator should be as fast as possible as this is called with every request, including
+    /// 404s.
+    pub context_generator: fn(Request) -> T
+}
+
+impl<T: Context + Send> App<T> {
 ///
 /// Starts the app with a thread pool optimized for small requests and quick timeouts. This
 /// is done internally by spawning a separate thread for each reactor core. This is valuable
@@ -67,4 +80,23 @@ pub fn start_small_load_optimized(mut app: App<T>, host: &str, port: u16) {
         // Spawn the task that handles the connection.
         tokio::spawn(task);
     }
+}
+
+/// Resolves a request, returning a future that is processable into a Response
+
+fn resolve(&self, mut request: Request) -> impl Future<Item=Response, Error=io::Error> + Send {
+    let matched_route = self._req_to_matched_route(&request);
+    request.set_params(matched_route.params);
+
+    let context = (self.context_generator)(request);
+    let middleware = matched_route.middleware;
+    let middleware_chain = MiddlewareChain::new(middleware);
+
+    let context_future = middleware_chain.next(context);
+
+    context_future
+        .and_then(|context| {
+            future::ok(context.get_response())
+        })
+}
 }

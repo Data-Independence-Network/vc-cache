@@ -13,8 +13,12 @@ pub struct AppendHeadList {
 
 impl AppendHeadList {
 
-    pub fn create(data: &[u32]) -> AppendHeadList {
-
+    pub fn new(buf: Unique<u32>) -> AppendHeadList {
+        AppendHeadList {
+            buf,
+            cap: 0,
+            len: 0
+        }
     }
 
     pub fn append(&self, data: &[u32]) {
@@ -25,13 +29,6 @@ impl AppendHeadList {
         
     }
 
-    pub fn new(cap: u8) -> AppendHeadList {
-        AppendHeadList {
-            buf: [],
-            cap,
-            len: 0,
-        }
-    }
     fn allocate_in(cap: usize) -> u32 {
         unsafe {
             let shifted: u32 = 256;
