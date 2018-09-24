@@ -4,3 +4,7 @@ version = "0.1.0"
 authors = ["russoturisto <russoturisto@gmail.com>"]
 
 [dependencies]
+tokio = "^0"
+tokio-codec = "^0"
+tokio-core = "^0"
+tokio-io = "^0"
