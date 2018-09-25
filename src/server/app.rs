@@ -151,7 +151,7 @@ impl<T: Context + Send> App<T> {
 
     fn resolve(&self, mut request: Request) -> impl Future<Item=Response, Error=io::Error> + Send {
         let response = self.get_response(&request);
-        request.set_params(matched_route.params);
+//        request.set_params(matched_route.params);
 
 //        let context = (self.context_generator)(request);
 //        let return_value = Box::new(future::ok(context));

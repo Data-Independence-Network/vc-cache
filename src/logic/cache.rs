@@ -1,0 +1,1 @@
+pub static mut data: Vec<u32> = Vec::new();
