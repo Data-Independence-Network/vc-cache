@@ -1,5 +1,6 @@
 extern crate byteorder;
 extern crate bytes;
+extern crate int_hash;
 extern crate smallvec;
 extern crate tokio;
 extern crate tokio_codec;

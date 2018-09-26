@@ -6,6 +6,7 @@ authors = ["russoturisto <russoturisto@gmail.com>"]
 [dependencies]
 byteorder = "1"
 bytes = "^0"
+int_hash="^0"
 futures = "^0"
 smallvec = "^0"
 tokio = "^0"
