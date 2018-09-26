@@ -40,11 +40,21 @@ pub static mut LAST_MONTH_CATEGORY_POLLS: LsbShiftTree<[u64]> = LsbShiftTree::ne
 
 pub static mut LOCATION_TIMEZONE_MAP: LsbShiftTree<usize> = LsbShiftTree::new();
 pub static mut LOCATIONS_BY_TIMEZONE: Vec<u32> = Vec::new();
+pub static mut TIMEZONE_MODIFICATION_FLAGS: Vec<boolean> = Vec::new();
+
+/**
+Split by timezone:
+*/
+
+pub struct LocationPollRankings<'a> {
+    location: &'a [LocationCategoryPollRanking],
+    categoryLocations: &'a LsbShiftTree<[LocationCategoryPollRanking]>,
+}
 
 
-pub struct TimezoneSlicedPolls {
-    location: [LocationCategoryPollRanking],
-    categoryLocations: LsbShiftTree<[u64]>,
+pub struct LocationPollPrependLists<'a> {
+    location: &'a PrependList<'a>,
+    categoryLocations: &'a LsbShiftTree<PrependList<'a>>,
 }
 
 
