@@ -176,6 +176,8 @@ pub struct OneDPoll {
 }
 
 pub trait OneToThreeDPoll {
+    fn serializeCounts() -> &[u8];
+    fn serializeAll() -> &[u8];
 }
 
 impl OneToThreeDPoll for ThreeDPoll {
