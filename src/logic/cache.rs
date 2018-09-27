@@ -4,14 +4,28 @@ use std::collections::HashMap;
 
 pub static mut data: Vec<u32> = Vec::new();
 
-pub static mut lastMonthId: [u32; 38] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+/**
+ * Global time period ids across timezones, maintained at the same time as data is moved
+ * in timezone chunks between, current and past (and future).
+ *
+ * Used to verify client requests, to make sure that their requests are still valid.
+ */
+pub static mut lastMonthIds: [u32; 38] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+pub static mut thisMonthIds: [u32; 38] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+pub static mut nextMonthIds: [u32; 38] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+pub static mut lastWeekIds: [u32; 38] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+pub static mut thisWeekIds: [u32; 38] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+pub static mut nextWeekIds: [u32; 38] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+pub static mut dayB4YesterdayIds: [u32; 38] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+pub static mut yesterdayIds: [u32; 38] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+pub static mut tomorrowIds: [u32; 38] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+pub static mut dayAfterTomorrowIds: [u32; 38] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+
 pub static mut LAST_MONTH_LOCATION_POLL_RANKINGS: Vec<LocationPollRankings> = Vec::new();
-pub static mut thisMonthId: [u32; 38] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 pub static mut THIS_MONTH_LOCATION_POLL_RANKINGS: Vec<LocationPollRankings> = Vec::new();
 
-pub static mut lastWeekId: [u32; 38] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 pub static mut LAST_WEEK_LOCATION_POLL_RANKINGS: Vec<LocationPollRankings> = Vec::new();
-pub static mut thisWeekId: [u32; 38] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 pub static mut THIS_WEEK_LOCATION_POLL_RANKINGS: Vec<LocationPollRankings> = Vec::new();
 
 pub static mut DAY_BEFORE_YESTERDAY_LOCATION_POLL_RANKINGS: Vec<LocationPollRankings> = Vec::new();
@@ -24,29 +38,16 @@ pub static mut TOMORROWS_LOCATION_POLLS: Vec<u32> = Vec::new();
 pub static mut DAY_AFTER_TOMORROWS_LOCATION_POLLS: Vec<u32> = Vec::new();
 
 
-pub static mut LAST_MONTH_CATEGORY_POLL_RANKINGS: Vec<Vec<OneToThreeDPoll>> = Vec::new();
-pub static mut THIS_MONTH_CATEGORY_POLL_RANKINGS: Vec<Vec<OneToThreeDPoll>> = Vec::new();
-
-pub static mut LAST_WEEK_CATEGORY_POLL_RANKINGS: Vec<Vec<OneToThreeDPoll>> = Vec::new();
-pub static mut THIS_WEEK_CATEGORY_POLL_RANKINGS: Vec<Vec<OneToThreeDPoll>> = Vec::new();
-
-pub static mut DAY_BEFORE_YESTERDAY_CATEGORY_POLL_RANKINGS: Vec<Vec<OneToThreeDPoll>> = Vec::new();
-pub static mut YESTERDAY_CATEGORY_POLL_RANKINGS: Vec<Vec<OneToThreeDPoll>> = Vec::new();
-pub static mut TODAY_CATEGORY_POLL_RANKINGS: Vec<Vec<OneToThreeDPoll>> = Vec::new();
-
-pub static mut NEXT_MONTHS_CATEGORY_POLLS: LsbShiftTree<PrependList> = LsbShiftTree::new();
-pub static mut NEXT_WEEKS_CATEGORY_POLLS: LsbShiftTree<PrependList> = LsbShiftTree::new();
-pub static mut TOMORROWS_CATEGORY_POLLS: LsbShiftTree<PrependList> = LsbShiftTree::new();
-pub static mut DAY_AFTER_TOMORROWS_CATEGORY_POLLS: LsbShiftTree<PrependList> = LsbShiftTree::new();
-
-
 pub static mut LAST_MONTH_CATEGORY_POLLS: LsbShiftTree<[u64]> = LsbShiftTree::new();
 
 pub static mut LOCATION_TIMEZONE_MAP: LsbShiftTree<usize> = LsbShiftTree::new();
 pub static mut LOCATIONS_BY_TIMEZONE: Vec<u32> = Vec::new();
 pub static mut TIMEZONE_MODIFICATION_FLAGS: Vec<boolean> = Vec::new();
 
-
+/**
+ *  Random access Category and Location Id maps, needed by initial lookup from clients.  The
+ *  stored index is then used to access the VoteCount nested arrays.
+ */
 pub static mut CATEGORY_LAST_MONTH_INDEX_MAP: IntHashMap<u64, usize> = IntHashMap::with_capacity(2000);
 pub static mut CATEGORY_THIS_MONTH_INDEX_MAP: IntHashMap<u64, usize> = IntHashMap::with_capacity(2000);
 pub static mut CATEGORY_LAST_WEEK_INDEX_MAP: IntHashMap<u64, usize> = IntHashMap::with_capacity(2000);
@@ -62,6 +63,23 @@ pub static mut LOCATION_THIS_WEEK_INDEX_MAP: IntHashMap<u64, LocationPeriodIds> 
 pub static mut LOCATION_DAY_BEFORE_YESTERDAY_INDEX_MAP: IntHashMap<u64, LocationPeriodIds> = IntHashMap::with_capacity(2000);
 pub static mut LOCATION_YESTERDAY_INDEX_MAP: IntHashMap<u64, LocationPeriodIds> = IntHashMap::with_capacity(2000);
 pub static mut LOCATION_TODAY_INDEX_MAP: IntHashMap<u64, LocationPeriodIds> = IntHashMap::with_capacity(2000);
+
+
+/**
+ * Poll rankings by Category.
+ * Q: Global category lookups are meant to cross timezone boundaries but how to maintain that?
+ *
+ * 1)  Maintain only per-location/per-category rankings
+ *
+ * 2)  Dynamically add and remove polls from category rankings as the go in and out of scope for each
+ * day (probably too hard at the moment).
+ *
+ * 3)  Maintain only previous period rankings (doable now) - Implementing
+ */
+pub static mut LAST_MONTH_CATEGORY_POLL_RANKINGS: Vec<Vec<VoteCount>> = Vec::new();
+pub static mut LAST_WEEK_CATEGORY_POLL_RANKINGS: Vec<Vec<OneToThreeDPoll>> = Vec::new();
+pub static mut DAY_BEFORE_YESTERDAY_CATEGORY_POLL_RANKINGS: Vec<Vec<OneToThreeDPoll>> = Vec::new();
+pub static mut YESTERDAY_CATEGORY_POLL_RANKINGS: Vec<Vec<OneToThreeDPoll>> = Vec::new();
 
 /**
  * Random access current poll maps, needed for count and sum increments by the voting servers
@@ -100,7 +118,6 @@ pub static mut THIS_MONTH_3_D_POLLS: Vec<Vec<ThreeDPoll>> = Vec::with_capacity(3
 pub static mut LAST_MONTH_1_D__POLLS: Vec<Vec<OneDPoll>> = Vec::with_capacity(38);
 pub static mut LAST_MONTH_2_D_POLLS: Vec<Vec<TwoDPoll>> = Vec::with_capacity(38);
 pub static mut LAST_MONTH_3_D_POLLS: Vec<Vec<ThreeDPoll>> = Vec::with_capacity(38);
-
 
 
 pub struct LocationPeriodIds {
