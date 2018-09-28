@@ -41,7 +41,7 @@ use boxed::Box;
 /// to handle the actual things *stored* inside of a RawVec.
 ///
 /// Note that a RawVec always forces its capacity to be usize::MAX for zero-sized types.
-/// This enables you to use capacity growing logic catch the overflows in your length
+/// This enables you to use capacity growing cache catch the overflows in your length
 /// that might occur with zero-sized types.
 ///
 /// However this means that you need to be careful when roundtripping this type
@@ -246,7 +246,7 @@ impl<T, A: Alloc> RawVec<T, A> {
 
     /// Doubles the size of the type's backing allocation. This is common enough
     /// to want to do that it's easiest to just have a dedicated method. Slightly
-    /// more efficient logic can be provided for this than the general case.
+    /// more efficient cache can be provided for this than the general case.
     ///
     /// This function is ideal for when pushing elements one-at-a-time because
     /// you don't need to incur the costs of the more general computations
@@ -344,7 +344,7 @@ impl<T, A: Alloc> RawVec<T, A> {
 
     /// Attempts to double the size of the type's backing allocation in place. This is common
     /// enough to want to do that it's easiest to just have a dedicated method. Slightly
-    /// more efficient logic can be provided for this than the general case.
+    /// more efficient cache can be provided for this than the general case.
     ///
     /// Returns true if the reallocation attempt has succeeded, or false otherwise.
     ///
@@ -427,7 +427,7 @@ impl<T, A: Alloc> RawVec<T, A> {
     }
 
     /// Calculates the buffer's new size given that it'll hold `used_cap +
-    /// needed_extra_cap` elements. This logic is used in amortized reserve methods.
+    /// needed_extra_cap` elements. This cache is used in amortized reserve methods.
     /// Returns `(new_capacity, new_alloc_size)`.
     fn amortized_new_size(&self, used_cap: usize, needed_extra_cap: usize)
                           -> Result<usize, CollectionAllocErr> {

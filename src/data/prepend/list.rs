@@ -224,7 +224,7 @@ impl PrependList {
     }
 
 
-    // If's its a depth2 tree use simpler logic to add values to it
+    // If's its a depth2 tree use simpler cache to add values to it
     if (lastBlockIndex < MAX_SECOND_LEVEL_BLOCKS) {
     var nextBlockIndex = lastBlockIndex + 1;
     var secondStepId = nextBlockIndex % BRANCH_LIST_LENGTH;

@@ -87,6 +87,10 @@ pub static mut TODAY_LOCATION_POLL_RANKINGS: Vec<Vec<LocationPollRankings>> = Ve
  * day (probably too hard at the moment).
  *
  * 3)  Maintain only previous period rankings (doable now) - Implementing
+ *
+ * 3a)  Actually, today's category rankings can be made available after UTC-8 (West Coast) passes
+ * its poll add deadline (10pm) for the next day.  At that point there are still 9-10 hours left
+ * in the day in Japan (depending on daylight savings).
  */
 pub static mut LAST_MONTH_CATEGORY_POLL_RANKINGS: Vec<Vec<VoteCount>> = Vec::new();
 pub static mut LAST_WEEK_CATEGORY_POLL_RANKINGS: Vec<Vec<OneToThreeDPoll>> = Vec::new();
