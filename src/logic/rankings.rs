@@ -1,5 +1,17 @@
-pub fn getTodaysCategoryRankings() {
+pub fn getTodaysCategoryRankings(
+    periodId: u32,
+    globalCategoryId: u64,
+    pageNumber: u32
+) {
 
+}
+
+pub fn getTodaysCategoryRankingsByIndex(
+    periodId: u32,
+    todaysCategoryIndex: u32,
+    pageNumber: u32
+) {
+    
 }
 
 pub fn getYesterdaysCategoryRankings() {

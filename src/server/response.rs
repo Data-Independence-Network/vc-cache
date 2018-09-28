@@ -5,7 +5,7 @@ use bytes::BytesMut;
 pub struct Response {
     pub response: Vec<u8>,
     pub status_message: StatusMessage,
-    pub header_raw: BytesMut
+//    pub header_raw: BytesMut
 }
 
 pub enum StatusMessage {
@@ -18,7 +18,7 @@ impl Response {
         Response {
             response: Vec::new(),
             status_message: StatusMessage::Ok,
-            header_raw: BytesMut::new()
+//            header_raw: BytesMut::new()
         }
     }
 
@@ -27,23 +27,23 @@ impl Response {
         self
     }
 
-    pub fn header(&mut self, name: &str, val: &str) -> &mut Response {
-        let header_string = templatify! { "" ; name ; ": " ; val ; "\r\n" };
-        self.header_raw.extend_from_slice(header_string.as_bytes());
+//    pub fn header(&mut self, name: &str, val: &str) -> &mut Response {
+//        let header_string = templatify! { "" ; name ; ": " ; val ; "\r\n" };
+//        self.header_raw.extend_from_slice(header_string.as_bytes());
+//
+//        self
+//    }
 
-        self
-    }
+//    pub fn header_raw(&mut self, buf: &BytesMut) -> &mut Response {
+//        self.header_raw.extend_from_slice(buf);
+//
+//        self
+//    }
 
-    pub fn header_raw(&mut self, buf: &BytesMut) -> &mut Response {
-        self.header_raw.extend_from_slice(buf);
-
-        self
-    }
-
-    pub fn body(&mut self, s: &str) -> &mut Response {
-        self.response = s.as_bytes().to_vec();
-        self
-    }
+//    pub fn body(&mut self, s: &str) -> &mut Response {
+//        self.response = s.as_bytes().to_vec();
+//        self
+//    }
 
     pub fn body_bytes(&mut self, b: &[u8]) -> &mut Response {
         self.response = b.to_vec();
@@ -64,7 +64,7 @@ pub fn encode(msg: Response, buf: &mut BytesMut) {
         Content-Length: {}\r\n\
     ", msg.status_message, length).unwrap();
 
-    buf.extend_from_slice(&msg.header_raw);
+//    buf.extend_from_slice(&msg.header_raw);
     buf.extend_from_slice("\r\n".as_bytes());
     buf.extend_from_slice(msg.response.as_slice());
 }
