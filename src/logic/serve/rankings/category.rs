@@ -2,6 +2,11 @@ use super::super::super::super::cache::cache;
 use super::super::super::super::cache::cache::VoteCount;
 use super::super::super::super::server::codes;
 
+use std::mem::transmute;
+
+static pageSize: usize = 1024;
+
+static maxNumPollBytes: usize = 4;
 
 pub fn get_todays_category_rankings_by_global_id(
     vcDayId: u32,
@@ -14,15 +19,49 @@ pub fn get_todays_category_rankings_by_global_id(
             return codes::INVALID_CATEGORY_RESPONSE;
         },
         Some(categoryIndex) => {
-            response: Vec<u8> = Vec::with_capacity(2048);
-            pollRankings: Vec<VoteCount> = cache::TODAY_CATEGORY_POLL_RANKINGS.get(categoryIndex);
+            let mut response: Vec<u8> = Vec::with_capacity(2048);
+            response.push(maxNumPollBytes as u8);
+            let mut pollRankings: Vec<VoteCount> = cache::TODAY_CATEGORY_POLL_RANKINGS.get(categoryIndex);
 
-            pollRankings
+
+
+            for x in pollRankings {
+
+            }
+
+            unsafe {
+                transmute
+            }
 
             return codes::INVALID_DATA_FORMAT_RESPONSE;
         },
     }
 
+}
+
+fn get4ByteRecentPolls(
+    pollRankings: Vec<VoteCount>,
+    startingIndex: usize,
+    pageSize: usize,
+    mut response: Vec<u8>
+) {
+    let mut iterator = pollRankings.iter().skip(startingIndex);
+
+    loop {
+        match iterator.next() {
+            None => return,
+            Some(voteCount) => {
+                response.push(voteCount.pollTypeAndTz);
+
+                let raw_bytes: [i8; 4] = unsafe { std::mem::transmute(voteCount.pollTypeAndTz); };
+            }
+        }
+    }
+
+    for byte in &raw_bytes {
+        println!("{}", byte);
+    }
+    return [b1, b2, b3, b4]
 }
 
 pub fn get_todays_category_rankings_by_cache_index(

@@ -9,7 +9,7 @@ pub static mut INVALID_CATEGORY_RESPONSE: Vec<u8> = Vec::with_capacity(1);
 pub static mut INVALID_LOCATION_RESPONSE: Vec<u8> = Vec::with_capacity(1);
 pub static mut INVALID_BLOCK_RESPONSE: Vec<u8> = Vec::with_capacity(1);
 
-pub fn setup_error_responses() -> void {
+pub fn setup_response_headers() -> void {
     INVALID_DATA_FORMAT_RESPONSE.push(RESPONSE_INVALID_FLAG + RESPONSE_INVALID_DATA_FORMAT_FLAG);
     INVALID_CATEGORY_RESPONSE.push(RESPONSE_INVALID_FLAG + RESPONSE_INVALID_CATEGORY_FLAG);
     INVALID_LOCATION_RESPONSE.push(RESPONSE_INVALID_FLAG + RESPONSE_INVALID_LOCATION_FLAG);

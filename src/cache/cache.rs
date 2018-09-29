@@ -275,9 +275,9 @@ pub struct VoteCount {
     /**
     First 5 bits are for timezone, last 3 for for Type
     */
-    pollTypeAndTz: u8,
-    tzAndPeriodPollId: u32,
-    count: u32,
+    pub pollTypeAndTz: u8,
+    pub tzAndPeriodPollId: u32,
+    pub count: u32,
 }
 
 /*
