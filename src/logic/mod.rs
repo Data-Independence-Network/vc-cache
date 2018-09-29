@@ -1,1 +1,2 @@
-pub mod rankings;
+pub mod add;
+pub mod serve;
