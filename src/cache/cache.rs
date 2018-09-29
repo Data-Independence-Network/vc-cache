@@ -93,9 +93,15 @@ pub static mut TODAY_LOCATION_POLL_RANKINGS: Vec<Vec<LocationPollRankings>> = Ve
  * in the day in Japan (depending on daylight savings).
  */
 pub static mut LAST_MONTH_CATEGORY_POLL_RANKINGS: Vec<Vec<VoteCount>> = Vec::new();
-pub static mut LAST_WEEK_CATEGORY_POLL_RANKINGS: Vec<Vec<OneToThreeDPoll>> = Vec::new();
-pub static mut DAY_BEFORE_YESTERDAY_CATEGORY_POLL_RANKINGS: Vec<Vec<OneToThreeDPoll>> = Vec::new();
-pub static mut YESTERDAY_CATEGORY_POLL_RANKINGS: Vec<Vec<OneToThreeDPoll>> = Vec::new();
+pub static mut THIS_MONTH_CATEGORY_POLL_RANKINGS: Vec<Vec<VoteCount>> = Vec::new();
+
+pub static mut LAST_WEEK_CATEGORY_POLL_RANKINGS: Vec<Vec<VoteCount>> = Vec::new();
+pub static mut THIS_WEEK_CATEGORY_POLL_RANKINGS: Vec<Vec<VoteCount>> = Vec::new();
+
+pub static mut DAY_BEFORE_YESTERDAY_CATEGORY_POLL_RANKINGS: Vec<Vec<VoteCount>> = Vec::new();
+pub static mut YESTERDAY_CATEGORY_POLL_RANKINGS: Vec<Vec<VoteCount>> = Vec::new();
+pub static mut TODAY_CATEGORY_POLL_RANKINGS: Vec<Vec<VoteCount>> = Vec::new();
+
 
 /**
  * Random access current poll maps, needed for count and sum increments by the voting servers.

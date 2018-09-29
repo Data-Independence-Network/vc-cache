@@ -1,8 +1,27 @@
+use super::super::super::super::cache::cache;
+use super::super::super::super::cache::cache::VoteCount;
+use super::super::super::super::server::codes;
+
+
 pub fn get_todays_category_rankings_by_global_id(
     vcDayId: u32,
-    globalCategoryId: u64,
+    globalCategoryId: &u64,
     blockIndex: u32,
 ) -> Vec<u8> {
+    const result: Option<&usize> = cache::CATEGORY_TODAY_INDEX_MAP.get(globalCategoryId);
+    match result {
+        None => {
+            return codes::INVALID_CATEGORY_RESPONSE;
+        },
+        Some(categoryIndex) => {
+            response: Vec<u8> = Vec::with_capacity(2048);
+            pollRankings: Vec<VoteCount> = cache::TODAY_CATEGORY_POLL_RANKINGS.get(categoryIndex);
+
+            pollRankings
+
+            return codes::INVALID_DATA_FORMAT_RESPONSE;
+        },
+    }
 
 }
 

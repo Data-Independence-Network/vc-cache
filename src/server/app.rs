@@ -91,7 +91,7 @@ impl<T: Context + Send> App<T> {
     }
 
     #[inline]
-    fn get_response(&self, request: &Request) -> Response {
+    fn get_response(&self, request: &Re7quest) -> Response {
         let mut response = Response::new();
 
         if request.method() != "PUT" {
@@ -106,7 +106,7 @@ impl<T: Context + Send> App<T> {
         let data = match path {
             codes::URL_TODAYS_LOCATION_CATEGORY_POLL_RANKINGS => {
                 if wrongRequestLength8(request) {
-                    response.body_bytes(&[codes::RESPONSE_INVALID_REQUEST]);
+                    response.body_vec(codes::INVALID_DATA_FORMAT_RESPONSE);
                     return response;
                 }
                 let locationId: u32 = getFirstUInt(request_body);
