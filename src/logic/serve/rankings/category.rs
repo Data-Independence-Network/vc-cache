@@ -13,16 +13,21 @@ const PAGE_SIZE: usize = 1024;
 const INITIAL_RESPONSE_VECTOR_SIZE_4_POLL_BYTES: usize =
 // space for the leading header byte
     1 +
+        // space for category cache index (if any
+        4 +
+        PAGE_SIZE +
         // space for category ids & vote counts
-        PAGE_SIZE * (4 + 3)
+        PAGE_SIZE * (4 + 3) +
         // space for the byte counts
-        + PAGE_SIZE / 4 +
+        PAGE_SIZE / 4 +
         // space for trailing size bytes
         2;
 
 const INITIAL_RESPONSE_VECTOR_SIZE_3_POLL_BYTES: usize =
 // space for the leading header byte
     1 +
+        // space for category cache index (if any
+        4 +
         // space for category ids & vote counts
         PAGE_SIZE * (3 + 3)
         // space for the byte counts
@@ -33,6 +38,8 @@ const INITIAL_RESPONSE_VECTOR_SIZE_3_POLL_BYTES: usize =
 const INITIAL_RESPONSE_VECTOR_SIZE_2_POLL_BYTES: usize =
 // space for the leading header byte
     1 +
+        // space for category cache index (if any
+        4 +
         // space for category ids & vote counts
         PAGE_SIZE * (2 + 3)
         // space for the byte counts
@@ -43,6 +50,8 @@ const INITIAL_RESPONSE_VECTOR_SIZE_2_POLL_BYTES: usize =
 const INITIAL_RESPONSE_VECTOR_SIZE_1_POLL_BYTES: usize =
 // space for the leading header byte
     1 +
+        // space for category cache index (if any
+        4 +
         // space for category ids & vote counts
         PAGE_SIZE * (1 + 3)
         // space for the byte counts
@@ -58,10 +67,11 @@ pub fn get_todays_category_rankings_by_global_id(
     return get_category_rankings_by_global_id(
         cache::CATEGORY_PERIOD_IDS.todayVcDayId,
         vcDayId,
-        cache::CATEGORY_TODAY_INDEX_MAP,
-        cache::TODAY_CATEGORY_POLL_RANKINGS,
+        cache::CATEGORY_TODAYS_INDEX_MAP,
+        cache::TODAYS_CATEGORY_POLL_RANKINGS,
         globalCategoryId,
         blockIndex,
+        cache::TODAYS_POLL_ID_BYTE_COUNTS[38],
     );
 }
 
@@ -73,9 +83,10 @@ pub fn get_todays_category_rankings_by_cache_index(
     return get_category_rankings_by_cache_index(
         cache::CATEGORY_PERIOD_IDS.todayVcDayId,
         vcDayId,
-        cache::TODAY_CATEGORY_POLL_RANKINGS,
+        cache::TODAYS_CATEGORY_POLL_RANKINGS,
         categoryCacheIndex,
         blockIndex,
+        cache::TODAYS_POLL_ID_BYTE_COUNTS[38],
     );
 }
 
@@ -87,10 +98,11 @@ pub fn get_yesterdays_category_rankings_by_global_id(
     return get_category_rankings_by_global_id(
         cache::CATEGORY_PERIOD_IDS.yesterdayVcDayId,
         vcDayId,
-        cache::CATEGORY_YESTERDAY_INDEX_MAP,
-        cache::YESTERDAY_CATEGORY_POLL_RANKINGS,
+        cache::CATEGORY_YESTERDAYS_INDEX_MAP,
+        cache::YESTERDAYS_CATEGORY_POLL_RANKINGS,
         globalCategoryId,
         blockIndex,
+        cache::YESTERDAYS_POLL_ID_BYTE_COUNTS[38],
     );
 }
 
@@ -102,9 +114,10 @@ pub fn get_yesterdays_category_rankings_by_cache_index(
     return get_category_rankings_by_cache_index(
         cache::CATEGORY_PERIOD_IDS.yesterdayVcDayId,
         vcDayId,
-        cache::YESTERDAY_CATEGORY_POLL_RANKINGS,
+        cache::YESTERDAYS_CATEGORY_POLL_RANKINGS,
         categoryCacheIndex,
         blockIndex,
+        cache::YESTERDAYS_POLL_ID_BYTE_COUNTS[38],
     );
 }
 
@@ -116,10 +129,11 @@ pub fn get_day_b4_yesterdays_category_rankings_by_global_id(
     return get_category_rankings_by_global_id(
         cache::CATEGORY_PERIOD_IDS.dayB4YesterdayVcDayId,
         vcDayId,
-        cache::CATEGORY_DAY_B4_YESTERDAY_INDEX_MAP,
-        cache::DAY_B4_YESTERDAY_CATEGORY_POLL_RANKINGS,
+        cache::CATEGORY_DAY_B4_YESTERDAYS_INDEX_MAP,
+        cache::DAY_B4_YESTERDAYS_CATEGORY_POLL_RANKINGS,
         globalCategoryId,
         blockIndex,
+        cache::DAY_B4_YESTERDAYS_POLL_ID_BYTE_COUNTS[38],
     );
 }
 
@@ -131,9 +145,10 @@ pub fn get_day_b4_yesterdays_category_rankings_by_cache_index(
     return get_category_rankings_by_cache_index(
         cache::CATEGORY_PERIOD_IDS.dayB4YesterdayVcDayId,
         vcDayId,
-        cache::DAY_B4_YESTERDAY_CATEGORY_POLL_RANKINGS,
+        cache::DAY_B4_YESTERDAYS_CATEGORY_POLL_RANKINGS,
         categoryCacheIndex,
         blockIndex,
+        cache::DAY_B4_YESTERDAYS_POLL_ID_BYTE_COUNTS[38],
     );
 }
 
@@ -145,10 +160,11 @@ pub fn get_this_weeks_category_rankings_by_global_id(
     return get_category_rankings_by_global_id(
         cache::CATEGORY_PERIOD_IDS.thisWeekVcWeekId,
         vcDayId,
-        cache::CATEGORY_THIS_WEEK_INDEX_MAP,
-        cache::THIS_WEEK_CATEGORY_POLL_RANKINGS,
+        cache::CATEGORY_THIS_WEEKS_INDEX_MAP,
+        cache::THIS_WEEKS_CATEGORY_POLL_RANKINGS,
         globalCategoryId,
         blockIndex,
+        cache::THIS_WEEKS_POLL_ID_BYTE_COUNTS[38],
     );
 }
 
@@ -160,9 +176,10 @@ pub fn get_this_weeks_category_rankings_by_cache_index(
     return get_category_rankings_by_cache_index(
         cache::CATEGORY_PERIOD_IDS.thisWeekVcWeekId,
         vcDayId,
-        cache::THIS_WEEK_CATEGORY_POLL_RANKINGS,
+        cache::THIS_WEEKS_CATEGORY_POLL_RANKINGS,
         categoryCacheIndex,
         blockIndex,
+        cache::THIS_WEEKS_POLL_ID_BYTE_COUNTS[38],
     );
 }
 
@@ -174,10 +191,11 @@ pub fn get_last_weeks_category_rankings_by_global_id(
     return get_category_rankings_by_global_id(
         cache::CATEGORY_PERIOD_IDS.lastWeekVcWeekId,
         vcDayId,
-        cache::CATEGORY_LAST_WEEK_INDEX_MAP,
-        cache::LAST_WEEK_CATEGORY_POLL_RANKINGS,
+        cache::CATEGORY_LAST_WEEKS_INDEX_MAP,
+        cache::LAST_WEEKS_CATEGORY_POLL_RANKINGS,
         globalCategoryId,
         blockIndex,
+        cache::LAST_WEEKS_POLL_ID_BYTE_COUNTS[38],
     );
 }
 
@@ -189,9 +207,10 @@ pub fn get_last_weeks_category_rankings_by_cache_index(
     return get_category_rankings_by_cache_index(
         cache::CATEGORY_PERIOD_IDS.lastWeekVcWeekId,
         vcDayId,
-        cache::LAST_WEEK_CATEGORY_POLL_RANKINGS,
+        cache::LAST_WEEKS_CATEGORY_POLL_RANKINGS,
         categoryCacheIndex,
         blockIndex,
+        cache::LAST_WEEKS_POLL_ID_BYTE_COUNTS[38],
     );
 }
 
@@ -203,10 +222,11 @@ pub fn get_this_months_category_rankings_by_global_id(
     return get_category_rankings_by_global_id(
         cache::CATEGORY_PERIOD_IDS.thisMonthVcMonthId,
         vcDayId,
-        cache::CATEGORY_THIS_MONTH_INDEX_MAP,
-        cache::THIS_MONTH_CATEGORY_POLL_RANKINGS,
+        cache::CATEGORY_THIS_MONTHS_INDEX_MAP,
+        cache::THIS_MONTHS_CATEGORY_POLL_RANKINGS,
         globalCategoryId,
         blockIndex,
+        cache::THIS_MONTHS_POLL_ID_BYTE_COUNTS[38],
     );
 }
 
@@ -218,9 +238,10 @@ pub fn get_this_months_category_rankings_by_cache_index(
     return get_category_rankings_by_cache_index(
         cache::CATEGORY_PERIOD_IDS.thisMonthVcMonthId,
         vcDayId,
-        cache::THIS_MONTH_CATEGORY_POLL_RANKINGS,
+        cache::THIS_MONTHS_CATEGORY_POLL_RANKINGS,
         categoryCacheIndex,
         blockIndex,
+        cache::THIS_MONTHS_POLL_ID_BYTE_COUNTS[38],
     );
 }
 
@@ -232,10 +253,11 @@ pub fn get_last_months_category_rankings_by_global_id(
     return get_category_rankings_by_global_id(
         cache::CATEGORY_PERIOD_IDS.lastMonthVcMonthId,
         vcDayId,
-        cache::CATEGORY_LAST_MONTH_INDEX_MAP,
-        cache::LAST_MONTH_CATEGORY_POLL_RANKINGS,
+        cache::CATEGORY_LAST_MONTHS_INDEX_MAP,
+        cache::LAST_MONTHS_CATEGORY_POLL_RANKINGS,
         globalCategoryId,
         blockIndex,
+        cache::LAST_MONTHS_POLL_ID_BYTE_COUNTS[38],
     );
 }
 
@@ -247,9 +269,10 @@ pub fn get_last_months_category_rankings_by_cache_index(
     return get_category_rankings_by_cache_index(
         cache::CATEGORY_PERIOD_IDS.lastMonthVcMonthId,
         vcDayId,
-        cache::LAST_MONTH_CATEGORY_POLL_RANKINGS,
+        cache::LAST_MONTHS_CATEGORY_POLL_RANKINGS,
         categoryCacheIndex,
         blockIndex,
+        cache::LAST_MONTHS_POLL_ID_BYTE_COUNTS[38],
     );
 }
 
@@ -257,9 +280,10 @@ fn get_category_rankings_by_global_id(
     currentPeriodId: u32,
     expectedPeriodId: u32,
     categoryIndexMap: IntHashMap<u64, u32>,
-    categoryPollRankings: CategoryPeriodPollRankings,
+    givenPeriodCategoryPollRankings: Vec<Vec<VoteCount>>,
     globalCategoryId: u64,
     blockIndex: u32,
+    maxPollNumberBytes: u8,
 ) -> Vec<u8> {
     if currentPeriodId != expectedPeriodId {
         return codes::INVALID_PERIOD_ID_RESPONSE;
@@ -271,8 +295,10 @@ fn get_category_rankings_by_global_id(
         None => {
             return codes::INVALID_GLOBAL_CATEGORY_ID_RESPONSE;
         }
-        Some(categoryIndex) => {
-            return get_category_rankings(firstRecordIndex, *categoryIndex, categoryPollRankings);
+        Some(categoryCacheIndex) => {
+            return get_category_rankings_with_category_cache_index(
+                firstRecordIndex, *categoryCacheIndex,
+                givenPeriodCategoryPollRankings, maxPollNumberBytes);
         }
     }
 }
@@ -280,9 +306,10 @@ fn get_category_rankings_by_global_id(
 fn get_category_rankings_by_cache_index(
     currentPeriodId: u32,
     expectedPeriodId: u32,
-    categoryPollRankings: CategoryPeriodPollRankings,
+    givenPeriodCategoryPollRankings: Vec<Vec<VoteCount>>,
     categoryCacheIndex: u32,
     blockIndex: u32,
+    maxPollNumberBytes: u8,
 ) -> Vec<u8> {
     if currentPeriodId != expectedPeriodId {
         return codes::INVALID_PERIOD_ID_RESPONSE;
@@ -290,48 +317,106 @@ fn get_category_rankings_by_cache_index(
 
     let firstRecordIndex = PAGE_SIZE * blockIndex;
 
-    match categoryPollRankings.voteCountsByCategoryIndex.get(categoryCacheIndex) {
+    match givenPeriodCategoryPollRankings.voteCountsByCategoryIndex.get(categoryCacheIndex) {
         None => {
             return codes::INVALID_CATEGORY_CACHE_INDEX_RESPONSE;
         }
         Some(_) => {
-            return get_category_rankings(firstRecordIndex, categoryCacheIndex, categoryPollRankings);
+            return get_category_rankings(
+                firstRecordIndex, categoryCacheIndex,
+                givenPeriodCategoryPollRankings, maxPollNumberBytes);
         }
     }
 }
 
-fn get_category_rankings(
+#[inline]
+fn get_category_rankings_with_category_cache_index(
     firstRecordIndex: usize,
-    categoryIndex: u32,
-    pollRankings: CategoryPeriodPollRankings,
+    categoryCacheIndex: u32,
+    givenPeriodCategoryPollRankings: Vec<Vec<VoteCount>>,
+    maxPollNumberBytes: u8,
 ) -> Vec<u8> {
-    let voteCountsForCategory = pollRankings.voteCountsByCategoryIndex[categoryIndex];
-    match pollRankings.maxPollNumberBytes {
+    let voteCountsForCategory = givenPeriodCategoryPollRankings[categoryCacheIndex];
+    let categoryCacheIndexBytes: [u8; 4] = unsafe {
+        std::mem::transmute(*categoryCacheIndex);
+    };
+
+
+    match maxPollNumberBytes {
         1 => {
-            return get1ByteRecentPolls(voteCountsForCategory, firstRecordIndex);
+            let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_1_POLL_BYTES);
+            response.push(0b00000000);
+            response.extend_from_slice(&categoryCacheIndexBytes);
+
+            return get1ByteRecentPolls(voteCountsForCategory, firstRecordIndex, response);
         }
         2 => {
-            return get2ByteRecentPolls(voteCountsForCategory, firstRecordIndex);
+            let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_2_POLL_BYTES);
+            response.push(0b00000000);
+            response.extend_from_slice(&categoryCacheIndexBytes);
+
+            return get2ByteRecentPolls(voteCountsForCategory, firstRecordIndex, response);
         }
         3 => {
-            return get3ByteRecentPolls(voteCountsForCategory, firstRecordIndex);
+            let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_3_POLL_BYTES);
+            response.push(0b00000000);
+            response.extend_from_slice(&categoryCacheIndexBytes);
+
+            return get3ByteRecentPolls(voteCountsForCategory, firstRecordIndex, response);
         }
         4 => {
-            return get4ByteRecentPolls(voteCountsForCategory, firstRecordIndex);
+            let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_4_POLL_BYTES);
+            response.push(0b00000000);
+            response.extend_from_slice(&categoryCacheIndexBytes);
+
+            return get4ByteRecentPolls(voteCountsForCategory, firstRecordIndex, response);
         }
     }
 //            return codes::INVALID_CATEGORY_RESPONSE;
 }
 
+#[inline]
+fn get_category_rankings(
+    firstRecordIndex: usize,
+    categoryIndex: u32,
+    givenPeriodCategoryPollRankings: Vec<Vec<VoteCount>>,
+    maxPollNumberBytes: u8,
+) -> Vec<u8> {
+    let voteCountsForCategory = givenPeriodCategoryPollRankings[categoryIndex];
+
+    match maxPollNumberBytes {
+        1 => {
+            let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_1_POLL_BYTES);
+            response.push(0b00000000);
+            return get1ByteRecentPolls(voteCountsForCategory, firstRecordIndex, response);
+        }
+        2 => {
+            let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_2_POLL_BYTES);
+            response.push(0b00000000);
+            return get2ByteRecentPolls(voteCountsForCategory, firstRecordIndex, response);
+        }
+        3 => {
+            let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_3_POLL_BYTES);
+            response.push(0b00000000);
+            return get3ByteRecentPolls(voteCountsForCategory, firstRecordIndex, response);
+        }
+        4 => {
+            let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_4_POLL_BYTES);
+            response.push(0b00000000);
+            return get4ByteRecentPolls(voteCountsForCategory, firstRecordIndex, response);
+        }
+    }
+//            return codes::INVALID_CATEGORY_RESPONSE;
+}
+
+#[inline]
 fn get4ByteRecentPolls(
     pollRankings: Vec<VoteCount>,
     startingIndex: usize,
+    mut response: Vec<u8>,
 ) -> Vec<u8> {
-    let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_4_POLL_BYTES);
-    response.push(0b00000000);
-
     let mut iterator = pollRankings.iter().skip(startingIndex);
-    let mut byteCounts = ByteCounts::new(PAGE_SIZE);
+    let mut voteCountsSizes = ByteCounts::new(PAGE_SIZE);
 
     for x in 0...PAGE_SIZE {
         match iterator.next() {
@@ -340,8 +425,7 @@ fn get4ByteRecentPolls(
                 response.push(voteCount.pollTypeAndTz);
 
                 let tzAndPeriodPollIdBytes: [u8; 4] = unsafe {
-// In this case tzAndPeriodPollId is the total number of polls in
-// the period across all time zones
+                    // Poll Id in the period of a given time zone
                     std::mem::transmute(*voteCount.tzAndPeriodPollId);
                 };
                 response.extend_from_slice(&tzAndPeriodPollIdBytes);
@@ -351,34 +435,33 @@ fn get4ByteRecentPolls(
                 };
                 if countBytes[0] != 0 {
                     response.extend_from_slice(&countBytes);
-                    byteCounts.add4();
+                    voteCountsSizes.add4();
                 } else if countBytes[1] != 0 {
                     response.extend_from_slice(&countBytes[1..3]);
-                    byteCounts.add3();
+                    voteCountsSizes.add3();
                 } else if countBytes[2] != 0 {
                     response.extend_from_slice(&countBytes[2..3]);
-                    byteCounts.add2();
+                    voteCountsSizes.add2();
                 } else {
                     response.push(countBytes[3]);
-                    byteCounts.add1();
+                    voteCountsSizes.add1();
                 }
             }
         }
     }
-    byteCounts.append(response);
+    voteCountsSizes.append(response);
 
     return response;
 }
 
+#[inline]
 fn get3ByteRecentPolls(
     pollRankings: Vec<VoteCount>,
     startingIndex: usize,
+    mut response: Vec<u8>,
 ) -> Vec<u8> {
-    let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_3_POLL_BYTES);
-    response.push(0b00000011);
-
     let mut iterator = pollRankings.iter().skip(startingIndex);
-    let mut byteCounts = ByteCounts::new(PAGE_SIZE);
+    let mut voteCountsSizes = ByteCounts::new(PAGE_SIZE);
 
     for x in 0...PAGE_SIZE {
         match iterator.next() {
@@ -387,8 +470,7 @@ fn get3ByteRecentPolls(
                 response.push(voteCount.pollTypeAndTz);
 
                 let tzAndPeriodPollIdBytes: [u8; 4] = unsafe {
-// In this case tzAndPeriodPollId is the total number of polls in
-// the period across all time zones
+                    // Poll Id in the period of a given time zone
                     std::mem::transmute(*voteCount.tzAndPeriodPollId);
                 };
                 response.extend_from_slice(&tzAndPeriodPollIdBytes[1..3]);
@@ -398,34 +480,33 @@ fn get3ByteRecentPolls(
                 };
                 if countBytes[0] != 0 {
                     response.extend_from_slice(&countBytes);
-                    byteCounts.add4();
+                    voteCountsSizes.add4();
                 } else if countBytes[1] != 0 {
                     response.extend_from_slice(&countBytes[1..3]);
-                    byteCounts.add3();
+                    voteCountsSizes.add3();
                 } else if countBytes[2] != 0 {
                     response.extend_from_slice(&countBytes[2..3]);
-                    byteCounts.add2();
+                    voteCountsSizes.add2();
                 } else {
                     response.push(countBytes[3]);
-                    byteCounts.add1();
+                    voteCountsSizes.add1();
                 }
             }
         }
     }
-    byteCounts.append(response);
+    voteCountsSizes.append(response);
 
     return response;
 }
 
+#[inline]
 fn get2ByteRecentPolls(
     pollRankings: Vec<VoteCount>,
     startingIndex: usize,
+    mut response: Vec<u8>,
 ) -> Vec<u8> {
-    let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_2_POLL_BYTES);
-    response.push(0b00000010);
-
     let mut iterator = pollRankings.iter().skip(startingIndex);
-    let mut byteCounts = ByteCounts::new(PAGE_SIZE);
+    let mut voteCountsSizes = ByteCounts::new(PAGE_SIZE);
 
     for x in 0...PAGE_SIZE {
         match iterator.next() {
@@ -434,8 +515,7 @@ fn get2ByteRecentPolls(
                 response.push(voteCount.pollTypeAndTz);
 
                 let tzAndPeriodPollIdBytes: [u8; 4] = unsafe {
-// In this case tzAndPeriodPollId is the total number of polls in
-// the period across all time zones
+                    // Poll Id in the period of a given time zone
                     std::mem::transmute(*voteCount.tzAndPeriodPollId);
                 };
                 response.extend_from_slice(&tzAndPeriodPollIdBytes[2..3]);
@@ -445,34 +525,33 @@ fn get2ByteRecentPolls(
                 };
                 if countBytes[0] != 0 {
                     response.extend_from_slice(&countBytes);
-                    byteCounts.add4();
+                    voteCountsSizes.add4();
                 } else if countBytes[1] != 0 {
                     response.extend_from_slice(&countBytes[1..3]);
-                    byteCounts.add3();
+                    voteCountsSizes.add3();
                 } else if countBytes[2] != 0 {
                     response.extend_from_slice(&countBytes[2..3]);
-                    byteCounts.add2();
+                    voteCountsSizes.add2();
                 } else {
                     response.push(countBytes[3]);
-                    byteCounts.add1();
+                    voteCountsSizes.add1();
                 }
             }
         }
     }
-    byteCounts.append(response);
+    voteCountsSizes.append(response);
 
     return response;
 }
 
+#[inline]
 fn get1ByteRecentPolls(
     pollRankings: Vec<VoteCount>,
     startingIndex: usize,
+    mut response: Vec<u8>,
 ) -> Vec<u8> {
-    let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_1_POLL_BYTES);
-    response.push(0b00000001);
-
     let mut iterator = pollRankings.iter().skip(startingIndex);
-    let mut byteCounts = ByteCounts::new(PAGE_SIZE);
+    let mut voteCountsSizes = ByteCounts::new(PAGE_SIZE);
 
     for x in 0...PAGE_SIZE {
         match iterator.next() {
@@ -481,8 +560,7 @@ fn get1ByteRecentPolls(
                 response.push(voteCount.pollTypeAndTz);
 
                 let tzAndPeriodPollIdBytes: [u8; 4] = unsafe {
-// In this case tzAndPeriodPollId is the total number of polls in
-// the period across all time zones
+                    // Poll Id in the period of a given time zone
                     std::mem::transmute(*voteCount.tzAndPeriodPollId);
                 };
                 response.push(tzAndPeriodPollIdBytes[3]);
@@ -492,21 +570,21 @@ fn get1ByteRecentPolls(
                 };
                 if countBytes[0] != 0 {
                     response.extend_from_slice(&countBytes);
-                    byteCounts.add4();
+                    voteCountsSizes.add4();
                 } else if countBytes[1] != 0 {
                     response.extend_from_slice(&countBytes[1..3]);
-                    byteCounts.add3();
+                    voteCountsSizes.add3();
                 } else if countBytes[2] != 0 {
                     response.extend_from_slice(&countBytes[2..3]);
-                    byteCounts.add2();
+                    voteCountsSizes.add2();
                 } else {
                     response.push(countBytes[3]);
-                    byteCounts.add1();
+                    voteCountsSizes.add1();
                 }
             }
         }
     }
-    byteCounts.append(response);
+    voteCountsSizes.append(response);
 
     return response;
 }

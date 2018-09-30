@@ -109,7 +109,17 @@ impl ByteCounts {
     }
 
     pub fn append(
-        mut self,
+        self,
+        mut response: Vec<u8>
+    ) {
+        self.appendData(response);
+        // NOTE: max page size is assumed to fin into u16
+        response.extend_from_slice(&numEntriesInListBytes[6..7]);
+    }
+
+    #[inline]
+    pub fn appendData(
+        self,
         mut response: Vec<u8>
     ) {
         let mut numByteCountsBytes = self.data.len();
@@ -122,7 +132,5 @@ impl ByteCounts {
         let numEntriesInListBytes: [u8; 8] = unsafe {
             std::mem::transmute(*numByteCountsBytes);
         };
-        // NOTE: max page size is assumed to fin into u16
-        response.extend_from_slice(&numEntriesInListBytes[6..7]);
     }
 }

@@ -144,7 +144,7 @@ impl<T: Context + Send> App<T> {
                 } else {
                     let (vcWeekId, blockIndex, globalCategoryId)
                     = readTwoIntsAndLong(request_body);
-                    category::get_this_months_category_rankings_by_global_id(
+                    category::get_this_weeks_category_rankings_by_global_id(
                         vcWeekId, blockIndex, globalCategoryId)
                 }
             }
@@ -154,7 +154,7 @@ impl<T: Context + Send> App<T> {
                 } else {
                     let (vcWeekId, blockIndex, categoryCacheIndex)
                     = readThreeInts(request_body);
-                    category::get_this_months_category_rankings_by_cache_index(
+                    category::get_this_weeks_category_rankings_by_cache_index(
                         vcWeekId, blockIndex, categoryCacheIndex)
                 }
             }
@@ -238,23 +238,23 @@ impl<T: Context + Send> App<T> {
                         vcDayId, blockIndex, categoryCacheIndex)
                 }
             }
-            codes::URL_YESTERDAYS_CATEGORY_POLL_RANKINGS_BY_GLOBAL_ID => {
+            codes::URL_DAY_B4_YESTERDAY_CATEGORY_POLL_RANKINGS_BY_GLOBAL_ID => {
                 if wrongRequestLength16(request_body) {
                     codes::INVALID_DATA_FORMAT_RESPONSE
                 } else {
                     let (vcDayId, blockIndex, globalCategoryId)
                     = readTwoIntsAndLong(request_body);
-                    category::get_yesterdays_category_rankings_by_global_id(
+                    category::get_day_b4_yesterdays_category_rankings_by_global_id(
                         vcDayId, blockIndex, globalCategoryId)
                 }
             }
-            codes::URL_YESTERDAYS_CATEGORY_POLL_RANKINGS_BY_CACHE_INDEX => {
+            codes::URL_DAY_B4_YESTERDAY_CATEGORY_POLL_RANKINGS_BY_CACHE_INDEX => {
                 if wrongRequestLength12(request_body) {
                     codes::INVALID_DATA_FORMAT_RESPONSE
                 } else {
                     let (vcDayId, blockIndex, categoryCacheIndex)
                     = readThreeInts(request_body);
-                    category::get_yesterdays_category_rankings_by_cache_index(
+                    category::get_day_b4_yesterdays_category_rankings_by_cache_index(
                         vcDayId, blockIndex, categoryCacheIndex)
                 }
             }
