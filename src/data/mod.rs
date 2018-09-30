@@ -1,5 +1,6 @@
 use std::thread;
 
+pub mod byte_counts;
 pub mod prepend;
 
 

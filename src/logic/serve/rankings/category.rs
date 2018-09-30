@@ -1,12 +1,13 @@
 use super::super::super::super::cache::cache;
 use super::super::super::super::cache::cache::VoteCount;
 use super::super::super::super::server::codes;
+use super::super::super::super::data::byte_counts::ByteCounts;
 
 use std::mem::transmute;
 
-static pageSize: usize = 1024;
+const PAGE_SIZE: usize = 1024;
 
-static maxNumPollBytes: usize = 4;
+const MAX_NUM_POLL_BYTES: usize = 4;
 
 pub fn get_todays_category_rankings_by_global_id(
     vcDayId: u32,
@@ -20,21 +21,14 @@ pub fn get_todays_category_rankings_by_global_id(
         },
         Some(categoryIndex) => {
             let mut response: Vec<u8> = Vec::with_capacity(2048);
-            response.push(maxNumPollBytes as u8);
+            response.push(MAX_NUM_POLL_BYTES as u8);
             let mut pollRankings: Vec<VoteCount> = cache::TODAY_CATEGORY_POLL_RANKINGS.get(categoryIndex);
 
+            match maxNumPollBytes
+            get4ByteRecentPolls(pollRankings, PAGE_SIZE * blockIndex, )
 
-
-            for x in pollRankings {
-
-            }
-
-            unsafe {
-                transmute
-            }
-
-            return codes::INVALID_DATA_FORMAT_RESPONSE;
-        },
+            return response;
+        }
     }
 
 }
@@ -42,26 +36,43 @@ pub fn get_todays_category_rankings_by_global_id(
 fn get4ByteRecentPolls(
     pollRankings: Vec<VoteCount>,
     startingIndex: usize,
-    pageSize: usize,
     mut response: Vec<u8>
 ) {
     let mut iterator = pollRankings.iter().skip(startingIndex);
+    let mut byteCounts = ByteCounts::new(PAGE_SIZE);
 
-    loop {
+    for x in  0...PAGE_SIZE {
         match iterator.next() {
-            None => return,
+            None => break,
             Some(voteCount) => {
                 response.push(voteCount.pollTypeAndTz);
-
-                let raw_bytes: [i8; 4] = unsafe { std::mem::transmute(voteCount.pollTypeAndTz); };
+                let tzAndPeriodPollIdBytes: [u8; 4] = unsafe {
+                    // In this case tzAndPeriodPollId is the total number of polls in
+                    // the period across all time zones
+                    std::mem::transmute(*voteCount.tzAndPeriodPollId);
+                };
+                response.extend_from_slice(&tzAndPeriodPollIdBytes);
+                let countBytes: [u8; 4] = unsafe {
+                    std::mem::transmute(*voteCount.count);
+                };
+                if countBytes[0] != 0 {
+                    response.extend_from_slice(&countBytes);
+                    byteCounts.add4();
+                } else if countBytes[1] != 0 {
+                    response.extend_from_slice(&countBytes[1..3]);
+                    byteCounts.add3();
+                } else if countBytes[2] != 0 {
+                    response.extend_from_slice(&countBytes[2..3]);
+                    byteCounts.add2();
+                } else {
+                    response.push(countBytes[3]);
+                    byteCounts.add1();
+                }
             }
         }
     }
 
-    for byte in &raw_bytes {
-        println!("{}", byte);
-    }
-    return [b1, b2, b3, b4]
+
 }
 
 pub fn get_todays_category_rankings_by_cache_index(

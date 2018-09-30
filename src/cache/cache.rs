@@ -92,15 +92,15 @@ pub static mut TODAY_LOCATION_POLL_RANKINGS: Vec<Vec<LocationPollRankings>> = Ve
  * its poll add deadline (10pm) for the next day.  At that point there are still 9-10 hours left
  * in the day in Japan (depending on daylight savings).
  */
-pub static mut LAST_MONTH_CATEGORY_POLL_RANKINGS: Vec<Vec<VoteCount>> = Vec::new();
-pub static mut THIS_MONTH_CATEGORY_POLL_RANKINGS: Vec<Vec<VoteCount>> = Vec::new();
+pub static mut LAST_MONTH_CATEGORY_POLL_RANKINGS: CategoryPeriodPollRankings = CategoryPeriodPollRankings::new(1024, 128);
+pub static mut THIS_MONTH_CATEGORY_POLL_RANKINGS: CategoryPeriodPollRankings = CategoryPeriodPollRankings::new(1024, 128);
 
-pub static mut LAST_WEEK_CATEGORY_POLL_RANKINGS: Vec<Vec<VoteCount>> = Vec::new();
-pub static mut THIS_WEEK_CATEGORY_POLL_RANKINGS: Vec<Vec<VoteCount>> = Vec::new();
+pub static mut LAST_WEEK_CATEGORY_POLL_RANKINGS: CategoryPeriodPollRankings = CategoryPeriodPollRankings::new(1024, 128);
+pub static mut THIS_WEEK_CATEGORY_POLL_RANKINGS: CategoryPeriodPollRankings = CategoryPeriodPollRankings::new(1024, 128);
 
-pub static mut DAY_BEFORE_YESTERDAY_CATEGORY_POLL_RANKINGS: Vec<Vec<VoteCount>> = Vec::new();
-pub static mut YESTERDAY_CATEGORY_POLL_RANKINGS: Vec<Vec<VoteCount>> = Vec::new();
-pub static mut TODAY_CATEGORY_POLL_RANKINGS: Vec<Vec<VoteCount>> = Vec::new();
+pub static mut DAY_BEFORE_YESTERDAY_CATEGORY_POLL_RANKINGS: CategoryPeriodPollRankings = CategoryPeriodPollRankings::new(1024, 128);
+pub static mut YESTERDAY_CATEGORY_POLL_RANKINGS: CategoryPeriodPollRankings = CategoryPeriodPollRankings::new(1024, 128);
+pub static mut TODAY_CATEGORY_POLL_RANKINGS: CategoryPeriodPollRankings = CategoryPeriodPollRankings::new(1024, 128);
 
 
 /**
@@ -150,14 +150,33 @@ pub static mut LAST_MONTH_3_D_POLLS: Vec<Vec<ThreeDPoll>> = Vec::with_capacity(3
  * Underlying data structures
  */
 
+pub struct CategoryPeriodPollRankings {
+    pub numPollsInPeriod: u32,
+    pub voteCountsByCategoryIndex: Vec<Vec<VoteCount>>,
+}
+
+impl CategoryPeriodPollRankings {
+
+    pub fn new(
+        numPollsInPeriod: u32,
+        numCategoriesInPeriod: usize
+    ) -> CategoryPeriodPollRankings {
+        CategoryPeriodPollRankings {
+            numPollsInPeriod,
+            voteCountsByCategoryIndex: Vec::with_capacity(numCategoriesInPeriod)
+        }
+    }
+
+}
+
 /**
  * Random access data structure needed for initial lookup of a Location+Category poll rankings.
  * Contains time period specific array index of the Location
  *      and a map (by Global Id) of the category indexes for same time period
  */
 pub struct LocationPeriodIds {
-    locationIndex: u32,
     categoryIndexMap: IntHashMap<u64, u32>,
+    locationIndex: u32,
 }
 
 impl LocationPeriodIds {
