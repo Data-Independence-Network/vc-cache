@@ -118,14 +118,24 @@ impl<T: Context + Send> App<T> {
         request_body: &[u8],
     ) -> Vec<u8> {
         match path {
-            codes::URL_LAST_MONTHS_CATEGORY_POLL_RANKINGS => {
-                if wrongRequestLength12(request_body) {
+            codes::URL_LAST_MONTHS_CATEGORY_POLL_RANKINGS_BY_GLOBAL_ID => {
+                if wrongRequestLength16(request_body) {
                     codes::INVALID_DATA_FORMAT_RESPONSE
                 } else {
                     let (vcMonthId, blockIndex, globalCategoryId)
                     = readTwoIntsAndLong(request_body);
                     category::get_last_months_category_rankings_by_global_id(
                         vcMonthId, blockIndex, globalCategoryId)
+                }
+            }
+            codes::URL_LAST_MONTHS_CATEGORY_POLL_RANKINGS_BY_CACHE_INDEX => {
+                if wrongRequestLength12(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (vcMonthId, blockIndex, categoryCacheIndex)
+                    = readThreeInts(request_body);
+                    category::get_last_months_category_rankings_by_cache_index(
+                        vcMonthId, blockIndex, categoryCacheIndex)
                 }
             }
 //            codes::URL_TODAYS_LOCATION_CATEGORY_POLL_RANKINGS => {
@@ -182,5 +192,15 @@ fn readTwoIntsAndLong(requestBody: &[u8]) -> (u32, u32, u64) {
         requestDataReader.read_u32::<BigEndian>().unwrap(),
         requestDataReader.read_u32::<BigEndian>().unwrap(),
         requestDataReader.read_u64::<BigEndian>().unwrap()
+    );
+}
+
+#[inline]
+fn readThreeInts(requestBody: &[u8]) -> (u32, u32, u32) {
+    let mut requestDataReader = Cursor::new(requestBody);
+    return (
+        requestDataReader.read_u32::<BigEndian>().unwrap(),
+        requestDataReader.read_u32::<BigEndian>().unwrap(),
+        requestDataReader.read_u32::<BigEndian>().unwrap()
     );
 }
