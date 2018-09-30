@@ -118,6 +118,66 @@ impl<T: Context + Send> App<T> {
         request_body: &[u8],
     ) -> Vec<u8> {
         match path {
+            codes::URL_THIS_MONTHS_CATEGORY_POLL_RANKINGS_BY_GLOBAL_ID => {
+                if wrongRequestLength16(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (vcMonthId, blockIndex, globalCategoryId)
+                    = readTwoIntsAndLong(request_body);
+                    category::get_this_months_category_rankings_by_global_id(
+                        vcMonthId, blockIndex, globalCategoryId)
+                }
+            }
+            codes::URL_THIS_MONTHS_CATEGORY_POLL_RANKINGS_BY_CACHE_INDEX => {
+                if wrongRequestLength12(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (vcMonthId, blockIndex, categoryCacheIndex)
+                    = readThreeInts(request_body);
+                    category::get_this_months_category_rankings_by_cache_index(
+                        vcMonthId, blockIndex, categoryCacheIndex)
+                }
+            }
+            codes::URL_THIS_WEEKS_CATEGORY_POLL_RANKINGS_BY_GLOBAL_ID => {
+                if wrongRequestLength16(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (vcWeekId, blockIndex, globalCategoryId)
+                    = readTwoIntsAndLong(request_body);
+                    category::get_this_months_category_rankings_by_global_id(
+                        vcWeekId, blockIndex, globalCategoryId)
+                }
+            }
+            codes::URL_THIS_WEEKS_CATEGORY_POLL_RANKINGS_BY_CACHE_INDEX => {
+                if wrongRequestLength12(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (vcWeekId, blockIndex, categoryCacheIndex)
+                    = readThreeInts(request_body);
+                    category::get_this_months_category_rankings_by_cache_index(
+                        vcWeekId, blockIndex, categoryCacheIndex)
+                }
+            }
+            codes::URL_TODAYS_CATEGORY_POLL_RANKINGS_BY_GLOBAL_ID => {
+                if wrongRequestLength16(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (vcDayId, blockIndex, globalCategoryId)
+                    = readTwoIntsAndLong(request_body);
+                    category::get_todays_category_rankings_by_global_id(
+                        vcDayId, blockIndex, globalCategoryId)
+                }
+            }
+            codes::URL_TODAYS_CATEGORY_POLL_RANKINGS_BY_CACHE_INDEX => {
+                if wrongRequestLength12(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (vcDayId, blockIndex, categoryCacheIndex)
+                    = readThreeInts(request_body);
+                    category::get_todays_category_rankings_by_cache_index(
+                        vcDayId, blockIndex, categoryCacheIndex)
+                }
+            }
             codes::URL_LAST_MONTHS_CATEGORY_POLL_RANKINGS_BY_GLOBAL_ID => {
                 if wrongRequestLength16(request_body) {
                     codes::INVALID_DATA_FORMAT_RESPONSE
@@ -136,6 +196,66 @@ impl<T: Context + Send> App<T> {
                     = readThreeInts(request_body);
                     category::get_last_months_category_rankings_by_cache_index(
                         vcMonthId, blockIndex, categoryCacheIndex)
+                }
+            }
+            codes::URL_LAST_WEEKS_CATEGORY_POLL_RANKINGS_BY_GLOBAL_ID => {
+                if wrongRequestLength16(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (vcWeekId, blockIndex, globalCategoryId)
+                    = readTwoIntsAndLong(request_body);
+                    category::get_last_weeks_category_rankings_by_global_id(
+                        vcWeekId, blockIndex, globalCategoryId)
+                }
+            }
+            codes::URL_LAST_WEEKS_CATEGORY_POLL_RANKINGS_BY_CACHE_INDEX => {
+                if wrongRequestLength12(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (vcWeekId, blockIndex, categoryCacheIndex)
+                    = readThreeInts(request_body);
+                    category::get_last_weeks_category_rankings_by_cache_index(
+                        vcWeekId, blockIndex, categoryCacheIndex)
+                }
+            }
+            codes::URL_YESTERDAYS_CATEGORY_POLL_RANKINGS_BY_GLOBAL_ID => {
+                if wrongRequestLength16(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (vcDayId, blockIndex, globalCategoryId)
+                    = readTwoIntsAndLong(request_body);
+                    category::get_yesterdays_category_rankings_by_global_id(
+                        vcDayId, blockIndex, globalCategoryId)
+                }
+            }
+            codes::URL_YESTERDAYS_CATEGORY_POLL_RANKINGS_BY_CACHE_INDEX => {
+                if wrongRequestLength12(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (vcDayId, blockIndex, categoryCacheIndex)
+                    = readThreeInts(request_body);
+                    category::get_yesterdays_category_rankings_by_cache_index(
+                        vcDayId, blockIndex, categoryCacheIndex)
+                }
+            }
+            codes::URL_YESTERDAYS_CATEGORY_POLL_RANKINGS_BY_GLOBAL_ID => {
+                if wrongRequestLength16(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (vcDayId, blockIndex, globalCategoryId)
+                    = readTwoIntsAndLong(request_body);
+                    category::get_yesterdays_category_rankings_by_global_id(
+                        vcDayId, blockIndex, globalCategoryId)
+                }
+            }
+            codes::URL_YESTERDAYS_CATEGORY_POLL_RANKINGS_BY_CACHE_INDEX => {
+                if wrongRequestLength12(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (vcDayId, blockIndex, categoryCacheIndex)
+                    = readThreeInts(request_body);
+                    category::get_yesterdays_category_rankings_by_cache_index(
+                        vcDayId, blockIndex, categoryCacheIndex)
                 }
             }
 //            codes::URL_TODAYS_LOCATION_CATEGORY_POLL_RANKINGS => {
