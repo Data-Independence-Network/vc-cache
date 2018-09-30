@@ -45,10 +45,10 @@ impl Response {
 //        self
 //    }
 
-    pub fn body_bytes(&mut self, b: &[u8]) -> &mut Response {
-        self.response = b.to_vec();
-        self
-    }
+//    pub fn body_bytes(&mut self, b: &[u8]) -> &mut Response {
+//        self.response = b.to_vec();
+//        self
+//    }
 
     pub fn body_vec(&mut self, data: Vec<u8>) -> &mut Response {
         self.response = data;

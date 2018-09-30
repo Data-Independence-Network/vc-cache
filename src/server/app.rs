@@ -1,9 +1,11 @@
 use std::io;
+use std::io::Cursor;
 use std::thread;
 use tokio::net::{TcpStream, TcpListener};
 use std::sync::Arc;
 use tokio_codec::Framed;
 use tokio::prelude::*;
+use byteorder::{BigEndian, ReadBytesExt};
 
 use super::response::Response;
 use super::request::Request;
@@ -11,6 +13,7 @@ use super::http::Http;
 use super::codes;
 
 use super::super::logic::cache_manager::CacheManager;
+use super::super::logic::serve::rankings::category;
 
 
 pub struct App<T: 'static + Context + Send> {
@@ -91,41 +94,53 @@ impl<T: Context + Send> App<T> {
     }
 
     #[inline]
-    fn get_response(&self, request: &Re7quest) -> Response {
+    fn get_response(&self, request: &Request) -> Response {
         let mut response = Response::new();
 
         if request.method() != "PUT" {
-            response.body_bytes(&[codes::RESPONSE_INVALID_REQUEST]);
+            response.body_vec(&[codes::RESPONSE_INVALID_REQUEST]);
             return response;
         }
 
         let path = request.path().as_ref();
         let request_body = request.raw_body();
 
-
-        let data = match path {
-            codes::URL_LAST_MONTHS_CATEGORY_POLL_RANKINGS => {
-
-            }
-            codes::URL_TODAYS_LOCATION_CATEGORY_POLL_RANKINGS => {
-                if wrongRequestLength8(request) {
-                    response.body_vec(codes::INVALID_DATA_FORMAT_RESPONSE);
-                    return response;
-                }
-                let locationId: u32 = getFirstUInt(request_body);
-                let categoryId: u32 = getSecondUInt(request_body);
-                let data = CacheManager::get_todays_location_category_poll_rankings(locationId, categoryId);
-                data
-            },
-            _ => {
-                response.body_vec(codes::INVALID_DATA_FORMAT_RESPONSE);
-                return response;
-            }
-        };
+        let data = self.getResponse(request_body);
 
         response.body_vec(data);
 
         response
+    }
+
+    #[inline]
+    fn getResponse(
+        &self,
+        request_body: &[u8],
+    ) -> Vec<u8> {
+        match path {
+            codes::URL_LAST_MONTHS_CATEGORY_POLL_RANKINGS => {
+                if wrongRequestLength12(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (vcMonthId, blockIndex, globalCategoryId)
+                    = readTwoIntsAndLong(request_body);
+                    category::get_last_months_category_rankings_by_global_id(
+                        vcMonthId, blockIndex, globalCategoryId)
+                }
+            }
+//            codes::URL_TODAYS_LOCATION_CATEGORY_POLL_RANKINGS => {
+//                if wrongRequestLength12(request.raw_body()) {
+//                    response.body_vec(codes::INVALID_DATA_FORMAT_RESPONSE);
+//                    return response;
+//                }
+//                let locationId: u32 = getFirstUInt(request_body);
+//                let categoryId: u32 = getSecondUInt(request_body);
+//                Vec::new() as Vec<u8>;
+//            }
+            _ => {
+                codes::INVALID_DATA_FORMAT_RESPONSE
+            }
+        }
     }
 
     /// Resolves a request, returning a future that is processable into a Response
@@ -140,7 +155,7 @@ impl<T: Context + Send> App<T> {
 //        return_value
 //            .and_then(|context| {
 //
-                future::ok(response)
+        future::ok(response)
 //            })
     }
 }
@@ -151,25 +166,21 @@ fn wrongRequestLength8(requestBody: &[u8]) -> boolean {
 }
 
 #[inline]
-fn getFirstUInt(requestBody: &[u8]) -> u32 {
-    let mut firstUInt: u32 = requestBody[0] << 24 as u32;
-    firstUInt = firstUInt + requestBody[1] << 16;
-    firstUInt = firstUInt + requestBody[2] << 8;
-    firstUInt = firstUInt + requestBody[3];
+fn wrongRequestLength12(requestBody: &[u8]) -> boolean {
+    requestBody.len() != 12
 }
 
 #[inline]
-fn getSecondUInt(requestBody: &[u8]) -> u32 {
-    let mut firstUInt: u32 = requestBody[4] << 24 as u32;
-    firstUInt = firstUInt + requestBody[5] << 16;
-    firstUInt = firstUInt + requestBody[6] << 8;
-    firstUInt = firstUInt + requestBody[7];
+fn wrongRequestLength16(requestBody: &[u8]) -> boolean {
+    requestBody.len() != 16
 }
 
 #[inline]
-fn getSecondUInt(requestBody: &[u8]) -> u32 {
-    let mut firstUInt: u32 = requestBody[8] << 24 as u32;
-    firstUInt = firstUInt + requestBody[9] << 16;
-    firstUInt = firstUInt + requestBody[10] << 8;
-    firstUInt = firstUInt + requestBody[11];
+fn readTwoIntsAndLong(requestBody: &[u8]) -> (u32, u32, u64) {
+    let mut requestDataReader = Cursor::new(requestBody);
+    return (
+        requestDataReader.read_u32::<BigEndian>().unwrap(),
+        requestDataReader.read_u32::<BigEndian>().unwrap(),
+        requestDataReader.read_u64::<BigEndian>().unwrap()
+    );
 }
