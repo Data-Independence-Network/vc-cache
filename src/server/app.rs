@@ -104,6 +104,9 @@ impl<T: Context + Send> App<T> {
 
 
         let data = match path {
+            codes::URL_LAST_MONTHS_CATEGORY_POLL_RANKINGS => {
+
+            }
             codes::URL_TODAYS_LOCATION_CATEGORY_POLL_RANKINGS => {
                 if wrongRequestLength8(request) {
                     response.body_vec(codes::INVALID_DATA_FORMAT_RESPONSE);
@@ -115,7 +118,7 @@ impl<T: Context + Send> App<T> {
                 data
             },
             _ => {
-                response.body_bytes(&[codes::RESPONSE_INVALID_REQUEST]);
+                response.body_vec(codes::INVALID_DATA_FORMAT_RESPONSE);
                 return response;
             }
         };
@@ -124,28 +127,6 @@ impl<T: Context + Send> App<T> {
 
         response
     }
-
-    #[inline]
-    fn wrongRequestLength8(requestBody: &[u8]) -> boolean {
-        requestBody.len() != 8
-    }
-
-    #[inline]
-    fn getFirstUInt(requestBody: &[u8]) -> u32 {
-        let mut firstUInt: u32 = requestBody[0] << 24 as u32;
-        firstUInt = firstUInt + requestBody[1] << 16;
-        firstUInt = firstUInt + requestBody[2] << 8;
-        firstUInt = firstUInt + requestBody[3];
-    }
-
-    #[inline]
-    fn getSecondUInt(requestBody: &[u8]) -> u32 {
-        let mut firstUInt: u32 = requestBody[4] << 24 as u32;
-        firstUInt = firstUInt + requestBody[5] << 16;
-        firstUInt = firstUInt + requestBody[6] << 8;
-        firstUInt = firstUInt + requestBody[7];
-    }
-
 
     /// Resolves a request, returning a future that is processable into a Response
 
@@ -162,4 +143,33 @@ impl<T: Context + Send> App<T> {
                 future::ok(response)
 //            })
     }
+}
+
+#[inline]
+fn wrongRequestLength8(requestBody: &[u8]) -> boolean {
+    requestBody.len() != 8
+}
+
+#[inline]
+fn getFirstUInt(requestBody: &[u8]) -> u32 {
+    let mut firstUInt: u32 = requestBody[0] << 24 as u32;
+    firstUInt = firstUInt + requestBody[1] << 16;
+    firstUInt = firstUInt + requestBody[2] << 8;
+    firstUInt = firstUInt + requestBody[3];
+}
+
+#[inline]
+fn getSecondUInt(requestBody: &[u8]) -> u32 {
+    let mut firstUInt: u32 = requestBody[4] << 24 as u32;
+    firstUInt = firstUInt + requestBody[5] << 16;
+    firstUInt = firstUInt + requestBody[6] << 8;
+    firstUInt = firstUInt + requestBody[7];
+}
+
+#[inline]
+fn getSecondUInt(requestBody: &[u8]) -> u32 {
+    let mut firstUInt: u32 = requestBody[8] << 24 as u32;
+    firstUInt = firstUInt + requestBody[9] << 16;
+    firstUInt = firstUInt + requestBody[10] << 8;
+    firstUInt = firstUInt + requestBody[11];
 }

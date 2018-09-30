@@ -6,6 +6,7 @@ extern crate tokio;
 extern crate tokio_codec;
 extern crate tokio_core;
 extern crate tokio_io;
+extern crate core;
 
 
 pub mod cache;
