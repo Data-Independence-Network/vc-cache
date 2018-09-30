@@ -40,13 +40,13 @@ pub static mut DAY_AFTER_TOMORROWS_LOCATION_POLLS: Vec<u32> = Vec::new();
  *  Random access Category and Location Id maps, needed by initial lookup from clients.  The
  *  stored index is then used to access the VoteCount nested arrays.
  */
-pub static mut CATEGORY_LAST_MONTH_INDEX_MAP: IntHashMap<u64, usize> = IntHashMap::with_capacity(2000);
-pub static mut CATEGORY_THIS_MONTH_INDEX_MAP: IntHashMap<u64, usize> = IntHashMap::with_capacity(2000);
-pub static mut CATEGORY_LAST_WEEK_INDEX_MAP: IntHashMap<u64, usize> = IntHashMap::with_capacity(2000);
-pub static mut CATEGORY_THIS_WEEK_INDEX_MAP: IntHashMap<u64, usize> = IntHashMap::with_capacity(2000);
-pub static mut CATEGORY_DAY_BEFORE_YESTERDAY_INDEX_MAP: IntHashMap<u64, usize> = IntHashMap::with_capacity(2000);
-pub static mut CATEGORY_YESTERDAY_INDEX_MAP: IntHashMap<u64, usize> = IntHashMap::with_capacity(2000);
-pub static mut CATEGORY_TODAY_INDEX_MAP: IntHashMap<u64, usize> = IntHashMap::with_capacity(2000);
+pub static mut CATEGORY_LAST_MONTH_INDEX_MAP: IntHashMap<u64, u32> = IntHashMap::with_capacity(2000);
+pub static mut CATEGORY_THIS_MONTH_INDEX_MAP: IntHashMap<u64, u32> = IntHashMap::with_capacity(2000);
+pub static mut CATEGORY_LAST_WEEK_INDEX_MAP: IntHashMap<u64, u32> = IntHashMap::with_capacity(2000);
+pub static mut CATEGORY_THIS_WEEK_INDEX_MAP: IntHashMap<u64, u32> = IntHashMap::with_capacity(2000);
+pub static mut CATEGORY_DAY_BEFORE_YESTERDAY_INDEX_MAP: IntHashMap<u64, u32> = IntHashMap::with_capacity(2000);
+pub static mut CATEGORY_YESTERDAY_INDEX_MAP: IntHashMap<u64, u32> = IntHashMap::with_capacity(2000);
+pub static mut CATEGORY_TODAY_INDEX_MAP: IntHashMap<u64, u32> = IntHashMap::with_capacity(2000);
 
 pub static mut LOCATION_LAST_MONTH_INDEX_MAP: IntHashMap<u64, LocationPeriodIds> = IntHashMap::with_capacity(2000);
 pub static mut LOCATION_THIS_MONTH_INDEX_MAP: IntHashMap<u64, LocationPeriodIds> = IntHashMap::with_capacity(2000);
@@ -76,6 +76,7 @@ pub static mut DAY_BEFORE_YESTERDAY_LOCATION_POLL_RANKINGS: Vec<Vec<LocationPoll
 pub static mut YESTERDAY_LOCATION_POLL_RANKINGS: Vec<Vec<LocationPollRankings>> = Vec::with_capacity(38);
 pub static mut TODAY_LOCATION_POLL_RANKINGS: Vec<Vec<LocationPollRankings>> = Vec::with_capacity(38);
 
+pub static mut CategoryPeriodIds : CategoryPeriodIds =
 
 /**
  * Poll rankings by Category.
@@ -150,7 +151,18 @@ pub static mut LAST_MONTH_3_D_POLLS: Vec<Vec<ThreeDPoll>> = Vec::with_capacity(3
  * Underlying data structures
  */
 
+pub struct CategoryPeriodIds {
+    pub dayB4YesterdayVcDayId: u32,
+    pub thisMonthVcMonthId: u32,
+    pub thisWeekVcWeekId: u32,
+    pub lastMonthVcMonthId: u32,
+    pub lastWeekVcWeekId: u32,
+    pub todayVcDayId: u32,
+    pub yesterdayVcDayId: u32,
+}
+
 pub struct CategoryPeriodPollRankings {
+    pub maxPollNumberBytes: u32,
     pub numPollsInPeriod: u32,
     pub voteCountsByCategoryIndex: Vec<Vec<VoteCount>>,
 }
@@ -158,10 +170,12 @@ pub struct CategoryPeriodPollRankings {
 impl CategoryPeriodPollRankings {
 
     pub fn new(
+        maxPollNumberBytes: u32,
         numPollsInPeriod: u32,
         numCategoriesInPeriod: usize
     ) -> CategoryPeriodPollRankings {
         CategoryPeriodPollRankings {
+            maxPollNumberBytes,
             numPollsInPeriod,
             voteCountsByCategoryIndex: Vec::with_capacity(numCategoriesInPeriod)
         }
