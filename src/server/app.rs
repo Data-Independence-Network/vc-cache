@@ -17,6 +17,21 @@ use super::super::logic::serve::rankings::category;
 use super::super::logic::serve::rankings::location;
 use super::super::logic::serve::rankings::location_category;
 
+use super::super::logic::serve::recent::category::get_day_after_tomorrows_category_polls;
+use super::super::logic::serve::recent::category::get_next_months_category_polls;
+use super::super::logic::serve::recent::category::get_next_weeks_category_polls;
+use super::super::logic::serve::recent::category::get_tomorrows_category_polls;
+
+use super::super::logic::serve::recent::location::get_day_after_tomorrows_location_polls;
+use super::super::logic::serve::recent::location::get_next_months_location_polls;
+use super::super::logic::serve::recent::location::get_next_weeks_location_polls;
+use super::super::logic::serve::recent::location::get_tomorrows_location_polls;
+
+use super::super::logic::serve::recent::location_category::get_day_after_tomorrows_category_location_polls;
+use super::super::logic::serve::recent::location_category::get_next_months_category_location_polls;
+use super::super::logic::serve::recent::location_category::get_next_weeks_category_location_polls;
+use super::super::logic::serve::recent::location_category::get_tomorrows_location_category_polls;
+
 
 pub struct App<T: 'static + Context + Send> {
     //    pub _route_parser: RouteParser<T>,
@@ -120,6 +135,12 @@ impl<T: Context + Send> App<T> {
         request_body: &[u8],
     ) -> Vec<u8> {
         match path {
+
+            /**
+             *
+             *  POLL RANKINGS
+             *
+             */
 
             // Category Poll Rankings
 
@@ -619,6 +640,58 @@ impl<T: Context + Send> App<T> {
                         vcDayId, timezoneId, blockIndex, locationCacheIndex, locationCategoryCacheIndex)
                 }
             }
+
+            /**
+             *
+             *  RECENT POLLS
+             *
+             */
+
+            // Recent Polls by Location
+
+            codes::URL_NEXT_MONTHS_LOCATION_POLLS => {
+
+            }
+        codes::URL_NEXT_WEEKS_LOCATION_POLLS => {
+
+        }
+        codes::URL_TOMORROWS_LOCATION_POLLS => {
+
+        }
+        codes::URL_DAY_AFTER_TOMORROWS_LOCATION_POLLS => {
+
+        }
+
+            // Recent Polls by Category
+
+            codes::URL_NEXT_MONTHS_CATEGORY_POLLS => {
+
+            }
+        codes::URL_NEXT_WEEKS_CATEGORY_POLLS => {
+
+        }
+        codes::URL_TOMORROWS_CATEGORY_POLLS => {
+
+        }
+        codes::URL_DAY_AFTER_TOMORROWS_CATEGORY_POLLS => {
+
+        }
+
+            // Recent Polls by Location Category
+
+            codes::URL_NEXT_MONTHS_LOCATION_CATEGORY_POLLS => {
+
+            }
+            codes::URL_NEXT_WEEKS_LOCATION_CATEGORY_POLLS => {
+
+            }
+            codes::URL_TOMORROWS_LOCATION_CATEGORY_POLLS => {
+
+            }
+            codes::URL_DAY_AFTER_TOMORROWS_LOCATION_CATEGORY_POLLS => {
+
+            }
+
             _ => {
                 codes::INVALID_DATA_FORMAT_RESPONSE
             }
