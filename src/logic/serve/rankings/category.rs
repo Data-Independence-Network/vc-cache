@@ -345,21 +345,21 @@ fn get_category_rankings_with_category_cache_index(
     match maxPollNumberBytes {
         1 => {
             let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_1_POLL_BYTES);
-            response.push(0b00000000);
+            response.push(0b00000001);
             response.extend_from_slice(&categoryCacheIndexBytes);
 
             return get1ByteRecentPolls(voteCountsForCategory, firstRecordIndex, response);
         }
         2 => {
             let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_2_POLL_BYTES);
-            response.push(0b00000000);
+            response.push(0b00000010);
             response.extend_from_slice(&categoryCacheIndexBytes);
 
             return get2ByteRecentPolls(voteCountsForCategory, firstRecordIndex, response);
         }
         3 => {
             let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_3_POLL_BYTES);
-            response.push(0b00000000);
+            response.push(0b00000011);
             response.extend_from_slice(&categoryCacheIndexBytes);
 
             return get3ByteRecentPolls(voteCountsForCategory, firstRecordIndex, response);
@@ -387,17 +387,17 @@ fn get_category_rankings(
     match maxPollNumberBytes {
         1 => {
             let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_1_POLL_BYTES);
-            response.push(0b00000000);
+            response.push(0b00000001);
             return get1ByteRecentPolls(voteCountsForCategory, firstRecordIndex, response);
         }
         2 => {
             let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_2_POLL_BYTES);
-            response.push(0b00000000);
+            response.push(0b00000010);
             return get2ByteRecentPolls(voteCountsForCategory, firstRecordIndex, response);
         }
         3 => {
             let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_3_POLL_BYTES);
-            response.push(0b00000000);
+            response.push(0b00000011);
             return get3ByteRecentPolls(voteCountsForCategory, firstRecordIndex, response);
         }
         4 => {

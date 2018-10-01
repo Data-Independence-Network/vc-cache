@@ -73,6 +73,14 @@ pub static mut LOCATION_DAY_B4_YESTERDAYS_INDEX_MAP: IntHashMap<u64, LocationPer
 pub static mut LOCATION_YESTERDAYS_INDEX_MAP: IntHashMap<u64, LocationPeriodIds> = IntHashMap::with_capacity(2000);
 pub static mut LOCATION_TODAYS_INDEX_MAP: IntHashMap<u64, LocationPeriodIds> = IntHashMap::with_capacity(2000);
 
+pub static mut LOCATION_CATEGORY_LAST_MONTHS_INDEX_MAP: IntHashMap<u32, LocationPeriodIds> = IntHashMap::with_capacity(2000);
+pub static mut LOCATION_CATEGORY_THIS_MONTHS_INDEX_MAP: IntHashMap<u32, LocationPeriodIds> = IntHashMap::with_capacity(2000);
+pub static mut LOCATION_CATEGORY_LAST_WEEKS_INDEX_MAP: IntHashMap<u32, LocationPeriodIds> = IntHashMap::with_capacity(2000);
+pub static mut LOCATION_CATEGORY_THIS_WEEKS_INDEX_MAP: IntHashMap<u32, LocationPeriodIds> = IntHashMap::with_capacity(2000);
+pub static mut LOCATION_CATEGORY_DAY_B4_YESTERDAYS_INDEX_MAP: IntHashMap<u32, LocationPeriodIds> = IntHashMap::with_capacity(2000);
+pub static mut LOCATION_CATEGORY_YESTERDAYS_INDEX_MAP: IntHashMap<u32, LocationPeriodIds> = IntHashMap::with_capacity(2000);
+pub static mut LOCATION_CATEGORY_TODAYS_INDEX_MAP: IntHashMap<u32, LocationPeriodIds> = IntHashMap::with_capacity(2000);
+
 /**
  *  The location/based poll rankings nested arrays by:
  *      Timezone Id
@@ -90,7 +98,7 @@ pub static mut LAST_WEEKS_LOCATION_POLL_RANKINGS: Vec<Vec<LocationPollRankings>>
 pub static mut THIS_WEEKS_LOCATION_POLL_RANKINGS: Vec<Vec<LocationPollRankings>> = Vec::with_capacity(38);
 
 pub static mut DAY_B4_YESTERDAYS_LOCATION_POLL_RANKINGS: Vec<Vec<LocationPollRankings>> = Vec::with_capacity(38);
-pub static mut YESTERDAY_LOCATION_POLL_RANKINGS: Vec<Vec<LocationPollRankings>> = Vec::with_capacity(38);
+pub static mut YESTERDAYS_LOCATION_POLL_RANKINGS: Vec<Vec<LocationPollRankings>> = Vec::with_capacity(38);
 pub static mut TODAYS_LOCATION_POLL_RANKINGS: Vec<Vec<LocationPollRankings>> = Vec::with_capacity(38);
 
 /**
