@@ -14,6 +14,7 @@ use super::codes;
 
 use super::super::logic::cache_manager::CacheManager;
 use super::super::logic::serve::rankings::category;
+use super::super::logic::serve::rankings::location;
 
 
 pub struct App<T: 'static + Context + Send> {
@@ -118,6 +119,9 @@ impl<T: Context + Send> App<T> {
         request_body: &[u8],
     ) -> Vec<u8> {
         match path {
+
+            // Category Poll Rankings
+
             codes::URL_THIS_MONTHS_CATEGORY_POLL_RANKINGS_BY_GLOBAL_ID => {
                 if wrongRequestLength16(request_body) {
                     codes::INVALID_DATA_FORMAT_RESPONSE
@@ -258,15 +262,149 @@ impl<T: Context + Send> App<T> {
                         vcDayId, blockIndex, categoryCacheIndex)
                 }
             }
-//            codes::URL_TODAYS_LOCATION_CATEGORY_POLL_RANKINGS => {
-//                if wrongRequestLength12(request.raw_body()) {
-//                    response.body_vec(codes::INVALID_DATA_FORMAT_RESPONSE);
-//                    return response;
-//                }
-//                let locationId: u32 = getFirstUInt(request_body);
-//                let categoryId: u32 = getSecondUInt(request_body);
-//                Vec::new() as Vec<u8>;
-//            }
+
+            // Location Poll Rankings
+
+            codes::URL_THIS_MONTHS_LOCATION_POLL_RANKINGS_BY_GLOBAL_ID => {
+                if wrongRequestLength20(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (vcMonthId, timezoneId, blockIndex, globalLocationId)
+                    = readThreeIntsAndLong(request_body);
+                    location::get_this_months_location_rankings_by_global_id(
+                        vcMonthId, timezoneId, blockIndex, globalLocationId)
+                }
+            }
+            codes::URL_THIS_MONTHS_LOCATION_POLL_RANKINGS_BY_CACHE_INDEX => {
+                if wrongRequestLength16(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (vcMonthId, timezoneId, blockIndex, locationCacheIndex)
+                    = readFourInts(request_body);
+                    location::get_this_months_location_rankings_by_cache_index(
+                        vcMonthId, timezoneId, blockIndex, locationCacheIndex)
+                }
+            }
+            codes::URL_THIS_WEEKS_LOCATION_POLL_RANKINGS_BY_GLOBAL_ID => {
+                if wrongRequestLength20(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (vcWeekId, timezoneId, blockIndex, globalLocationId)
+                    = readThreeIntsAndLong(request_body);
+                    location::get_this_weeks_location_rankings_by_global_id(
+                        vcWeekId, timezoneId, blockIndex, globalLocationId)
+                }
+            }
+            codes::URL_THIS_WEEKS_LOCATION_POLL_RANKINGS_BY_CACHE_INDEX => {
+                if wrongRequestLength16(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (vcWeekId, timezoneId, blockIndex, locationCacheIndex)
+                    = readFourInts(request_body);
+                    location::get_this_weeks_location_rankings_by_cache_index(
+                        vcWeekId, timezoneId, blockIndex, locationCacheIndex)
+                }
+            }
+            codes::URL_TODAYS_LOCATION_POLL_RANKINGS_BY_GLOBAL_ID => {
+                if wrongRequestLength20(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (vcDayId, timezoneId, blockIndex, globalLocationId)
+                    = readThreeIntsAndLong(request_body);
+                    location::get_todays_location_rankings_by_global_id(
+                        vcDayId, timezoneId, blockIndex, globalLocationId)
+                }
+            }
+            codes::URL_TODAYS_LOCATION_POLL_RANKINGS_BY_CACHE_INDEX => {
+                if wrongRequestLength16(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (vcDayId, timezoneId, blockIndex, locationCacheIndex)
+                    = readFourInts(request_body);
+                    location::get_todays_location_rankings_by_cache_index(
+                        vcDayId, timezoneId, blockIndex, locationCacheIndex)
+                }
+            }
+            codes::URL_LAST_MONTHS_LOCATION_POLL_RANKINGS_BY_GLOBAL_ID => {
+                if wrongRequestLength20(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (vcMonthId, timezoneId, blockIndex, globalLocationId)
+                    = readThreeIntsAndLong(request_body);
+                    location::get_last_months_location_rankings_by_global_id(
+                        vcMonthId, timezoneId, blockIndex, globalLocationId)
+                }
+            }
+            codes::URL_LAST_MONTHS_LOCATION_POLL_RANKINGS_BY_CACHE_INDEX => {
+                if wrongRequestLength16(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (vcMonthId, timezoneId, blockIndex, locationCacheIndex)
+                    = readFourInts(request_body);
+                    location::get_last_months_location_rankings_by_cache_index(
+                        vcMonthId, timezoneId, blockIndex, locationCacheIndex)
+                }
+            }
+            codes::URL_LAST_WEEKS_LOCATION_POLL_RANKINGS_BY_GLOBAL_ID => {
+                if wrongRequestLength20(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (vcWeekId, timezoneId, blockIndex, globalLocationId)
+                    = readThreeIntsAndLong(request_body);
+                    location::get_last_weeks_location_rankings_by_global_id(
+                        vcWeekId, timezoneId, blockIndex, globalLocationId)
+                }
+            }
+            codes::URL_LAST_WEEKS_LOCATION_POLL_RANKINGS_BY_CACHE_INDEX => {
+                if wrongRequestLength16(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (vcWeekId, timezoneId, blockIndex, locationCacheIndex)
+                    = readFourInts(request_body);
+                    location::get_last_weeks_location_rankings_by_cache_index(
+                        vcWeekId, timezoneId, blockIndex, locationCacheIndex)
+                }
+            }
+            codes::URL_YESTERDAYS_LOCATION_POLL_RANKINGS_BY_GLOBAL_ID => {
+                if wrongRequestLength20(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (vcDayId, timezoneId, blockIndex, globalLocationId)
+                    = readThreeIntsAndLong(request_body);
+                    location::get_yesterdays_location_rankings_by_global_id(
+                        vcDayId, timezoneId, blockIndex, globalLocationId)
+                }
+            }
+            codes::URL_YESTERDAYS_LOCATION_POLL_RANKINGS_BY_CACHE_INDEX => {
+                if wrongRequestLength16(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (vcDayId, timezoneId, blockIndex, locationCacheIndex)
+                    = readFourInts(request_body);
+                    location::get_yesterdays_location_rankings_by_cache_index(
+                        vcDayId, timezoneId, blockIndex, locationCacheIndex)
+                }
+            }
+            codes::URL_DAY_B4_YESTERDAY_LOCATION_POLL_RANKINGS_BY_GLOBAL_ID => {
+                if wrongRequestLength20(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (vcDayId, timezoneId, blockIndex, globalLocationId)
+                    = readThreeIntsAndLong(request_body);
+                    location::get_day_b4_yesterdays_location_rankings_by_global_id(
+                        vcDayId, timezoneId, blockIndex, globalLocationId)
+                }
+            }
+            codes::URL_DAY_B4_YESTERDAY_LOCATION_POLL_RANKINGS_BY_CACHE_INDEX => {
+                if wrongRequestLength16(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (vcDayId, timezoneId, blockIndex, locationCacheIndex)
+                    = readFourInts(request_body);
+                    location::get_day_b4_yesterdays_location_rankings_by_cache_index(
+                        vcDayId, timezoneId, blockIndex, locationCacheIndex)
+                }
+            }
             _ => {
                 codes::INVALID_DATA_FORMAT_RESPONSE
             }
@@ -306,6 +444,11 @@ fn wrongRequestLength16(requestBody: &[u8]) -> boolean {
 }
 
 #[inline]
+fn wrongRequestLength20(requestBody: &[u8]) -> boolean {
+    requestBody.len() != 20
+}
+
+#[inline]
 fn readTwoIntsAndLong(requestBody: &[u8]) -> (u32, u32, u64) {
     let mut requestDataReader = Cursor::new(requestBody);
     return (
@@ -319,6 +462,28 @@ fn readTwoIntsAndLong(requestBody: &[u8]) -> (u32, u32, u64) {
 fn readThreeInts(requestBody: &[u8]) -> (u32, u32, u32) {
     let mut requestDataReader = Cursor::new(requestBody);
     return (
+        requestDataReader.read_u32::<BigEndian>().unwrap(),
+        requestDataReader.read_u32::<BigEndian>().unwrap(),
+        requestDataReader.read_u32::<BigEndian>().unwrap()
+    );
+}
+
+#[inline]
+fn readThreeIntsAndLong(requestBody: &[u8]) -> (u32, u32, u32, u64) {
+    let mut requestDataReader = Cursor::new(requestBody);
+    return (
+        requestDataReader.read_u32::<BigEndian>().unwrap(),
+        requestDataReader.read_u32::<BigEndian>().unwrap(),
+        requestDataReader.read_u32::<BigEndian>().unwrap(),
+        requestDataReader.read_u64::<BigEndian>().unwrap()
+    );
+}
+
+#[inline]
+fn readFourInts(requestBody: &[u8]) -> (u32, u32, u32, u32) {
+    let mut requestDataReader = Cursor::new(requestBody);
+    return (
+        requestDataReader.read_u32::<BigEndian>().unwrap(),
         requestDataReader.read_u32::<BigEndian>().unwrap(),
         requestDataReader.read_u32::<BigEndian>().unwrap(),
         requestDataReader.read_u32::<BigEndian>().unwrap()
