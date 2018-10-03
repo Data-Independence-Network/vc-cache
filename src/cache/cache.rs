@@ -1,5 +1,13 @@
-use super::super::data::prepend::list::PrependList;
+use super::super::data::prepend::LsbShiftTree;
 use int_hash::IntHashMap;
+
+
+pub type CategoryCacheIndex = u32;
+pub type CategoryId = u64;
+pub type LocationCacheIndex = u32;
+pub type LocationCategoryCacheIndex = u32;
+pub type LocationId = u64;
+pub type PollId = u64;
 
 /**
  * Global time period ids across timezones, maintained at the same time as data is moved
@@ -39,47 +47,61 @@ pub static mut CATEGORY_CACHE_PERIOD_IDS: CachePeriodIds = CachePeriodIds::new()
 */
 pub static mut PER_TIMEZONE__CACHE_PERIOD_IDS: Vec<CachePeriodIds> = Vec::with_capacity(38);
 
-
-
 //pub static mut LOCATION_TIMEZONE_MAP: LsbShiftTree<usize> = LsbShiftTree::new();
 //pub static mut LOCATIONS_BY_TIMEZONE: Vec<u32> = Vec::new();
 
 // Keeps track of when a timezone is being modified
 pub static mut TIMEZONE_MODIFICATION_FLAGS: Vec<boolean> = Vec::with_capacity(38);
 
-pub static mut NEXT_MONTHS_LOCATION_POLLS: Vec<LocationPollPrependLists> = Vec::with_capacity(38);
-pub static mut NEXT_WEEKS_LOCATION_POLLS: Vec<u32> = Vec::new();
-pub static mut TOMORROWS_LOCATION_POLLS: Vec<u32> = Vec::new();
-pub static mut DAY_AFTER_TOMORROWS_LOCATION_POLLS: Vec<u32> = Vec::new();
+/**
+ *  Future period prepend data structures for adding recent polls.
+ *    By:   timezoneId
+ *              locationId
+ *                  categoryId
+ *  Contain only the prepended Poll Ids
+ */
+pub static mut NEXT_MONTHS_POLLS_BY_LOCATION: Vec<IntHashMap<LocationId, LocationPollPrependLists>> = Vec::with_capacity(38);
+pub static mut NEXT_WEEKS_POLLS_BY_LOCATION: Vec<IntHashMap<LocationId, LocationPollPrependLists>> = Vec::with_capacity(38);
+pub static mut TOMORROWS_POLLS_BY_LOCATION: Vec<IntHashMap<LocationId, LocationPollPrependLists>> = Vec::with_capacity(38);
+pub static mut DAY_AFTER_TOMORROWS_POLLS_BY_LOCATION: Vec<IntHashMap<LocationId, LocationPollPrependLists>> = Vec::with_capacity(38);
 
+/**
+ *  Future period prepend data structures for per category access.
+ *      By:     categoryId
+ *  Contain only the prepended Poll Ids
+ */
+pub static mut NEXT_MONTHS_POLLS_BY_CATEGORY: LsbShiftTree<Vec<Vec<PollId>>> = LsbShiftTree::with_branch_factor(65536, 8);
+pub static mut NEXT_WEEKS_POLLS_BY_CATEGORY: LsbShiftTree<Vec<Vec<PollId>>> = LsbShiftTree::with_branch_factor(65536, 8);
+pub static mut TOMORROWS_POLLS_BY_CATEGORY: LsbShiftTree<Vec<Vec<PollId>>> = LsbShiftTree::with_branch_factor(65536, 8);
+pub static mut DAY_AFTER_TOMORROWS_POLLS_BY_CATEGORY: LsbShiftTree<Vec<Vec<PollId>>> = LsbShiftTree::with_branch_factor(65536, 8);
 
 /**
  *  Random access Category and Location Id maps, needed by initial lookup from clients.  The
  *  stored index is then used to access the VoteCount nested arrays.
  */
-pub static mut CATEGORY_LAST_MONTHS_INDEX_MAP: IntHashMap<u64, u32> = IntHashMap::with_capacity(2000);
-pub static mut CATEGORY_THIS_MONTHS_INDEX_MAP: IntHashMap<u64, u32> = IntHashMap::with_capacity(2000);
-pub static mut CATEGORY_LAST_WEEKS_INDEX_MAP: IntHashMap<u64, u32> = IntHashMap::with_capacity(2000);
-pub static mut CATEGORY_THIS_WEEKS_INDEX_MAP: IntHashMap<u64, u32> = IntHashMap::with_capacity(2000);
-pub static mut CATEGORY_DAY_B4_YESTERDAYS_INDEX_MAP: IntHashMap<u64, u32> = IntHashMap::with_capacity(2000);
-pub static mut CATEGORY_YESTERDAYS_INDEX_MAP: IntHashMap<u64, u32> = IntHashMap::with_capacity(2000);
-pub static mut CATEGORY_TODAYS_INDEX_MAP: IntHashMap<u64, u32> = IntHashMap::with_capacity(2000);
+pub static mut CATEGORY_LAST_MONTHS_INDEX_MAP: IntHashMap<CategoryId, CategoryCacheIndex> = IntHashMap::with_capacity(2000);
+pub static mut CATEGORY_THIS_MONTHS_INDEX_MAP: IntHashMap<CategoryId, CategoryCacheIndex> = IntHashMap::with_capacity(2000);
+pub static mut CATEGORY_LAST_WEEKS_INDEX_MAP: IntHashMap<CategoryId, CategoryCacheIndex> = IntHashMap::with_capacity(2000);
+pub static mut CATEGORY_THIS_WEEKS_INDEX_MAP: IntHashMap<CategoryId, CategoryCacheIndex> = IntHashMap::with_capacity(2000);
+pub static mut CATEGORY_DAY_B4_YESTERDAYS_INDEX_MAP: IntHashMap<CategoryId, CategoryCacheIndex> = IntHashMap::with_capacity(2000);
+pub static mut CATEGORY_YESTERDAYS_INDEX_MAP: IntHashMap<CategoryId, CategoryCacheIndex> = IntHashMap::with_capacity(2000);
+pub static mut CATEGORY_TODAYS_INDEX_MAP: IntHashMap<CategoryId, CategoryCacheIndex> = IntHashMap::with_capacity(2000);
 
-pub static mut LOCATION_LAST_MONTHS_INDEX_MAP: IntHashMap<u64, LocationPeriodIds> = IntHashMap::with_capacity(2000);
-pub static mut LOCATION_THIS_MONTHS_INDEX_MAP: IntHashMap<u64, LocationPeriodIds> = IntHashMap::with_capacity(2000);
-pub static mut LOCATION_LAST_WEEKS_INDEX_MAP: IntHashMap<u64, LocationPeriodIds> = IntHashMap::with_capacity(2000);
-pub static mut LOCATION_THIS_WEEKS_INDEX_MAP: IntHashMap<u64, LocationPeriodIds> = IntHashMap::with_capacity(2000);
-pub static mut LOCATION_DAY_B4_YESTERDAYS_INDEX_MAP: IntHashMap<u64, LocationPeriodIds> = IntHashMap::with_capacity(2000);
-pub static mut LOCATION_YESTERDAYS_INDEX_MAP: IntHashMap<u64, LocationPeriodIds> = IntHashMap::with_capacity(2000);
-pub static mut LOCATION_TODAYS_INDEX_MAP: IntHashMap<u64, LocationPeriodIds> = IntHashMap::with_capacity(2000);
+pub static mut LOCATION_LAST_MONTHS_INDEX_MAP: IntHashMap<LocationId, LocationPeriodIds> = IntHashMap::with_capacity(2000);
+pub static mut LOCATION_THIS_MONTHS_INDEX_MAP: IntHashMap<LocationId, LocationPeriodIds> = IntHashMap::with_capacity(2000);
+pub static mut LOCATION_LAST_WEEKS_INDEX_MAP: IntHashMap<LocationId, LocationPeriodIds> = IntHashMap::with_capacity(2000);
+pub static mut LOCATION_THIS_WEEKS_INDEX_MAP: IntHashMap<LocationId, LocationPeriodIds> = IntHashMap::with_capacity(2000);
+pub static mut LOCATION_DAY_B4_YESTERDAYS_INDEX_MAP: IntHashMap<LocationId, LocationPeriodIds> = IntHashMap::with_capacity(2000);
+pub static mut LOCATION_YESTERDAYS_INDEX_MAP: IntHashMap<LocationId, LocationPeriodIds> = IntHashMap::with_capacity(2000);
+pub static mut LOCATION_TODAYS_INDEX_MAP: IntHashMap<LocationId, LocationPeriodIds> = IntHashMap::with_capacity(2000);
 
-pub static mut LOCATION_CATEGORY_LAST_MONTHS_INDEX_MAP: IntHashMap<u32, LocationPeriodIds> = IntHashMap::with_capacity(2000);
-pub static mut LOCATION_CATEGORY_THIS_MONTHS_INDEX_MAP: IntHashMap<u32, LocationPeriodIds> = IntHashMap::with_capacity(2000);
-pub static mut LOCATION_CATEGORY_LAST_WEEKS_INDEX_MAP: IntHashMap<u32, LocationPeriodIds> = IntHashMap::with_capacity(2000);
-pub static mut LOCATION_CATEGORY_THIS_WEEKS_INDEX_MAP: IntHashMap<u32, LocationPeriodIds> = IntHashMap::with_capacity(2000);
-pub static mut LOCATION_CATEGORY_DAY_B4_YESTERDAYS_INDEX_MAP: IntHashMap<u32, LocationPeriodIds> = IntHashMap::with_capacity(2000);
-pub static mut LOCATION_CATEGORY_YESTERDAYS_INDEX_MAP: IntHashMap<u32, LocationPeriodIds> = IntHashMap::with_capacity(2000);
-pub static mut LOCATION_CATEGORY_TODAYS_INDEX_MAP: IntHashMap<u32, LocationPeriodIds> = IntHashMap::with_capacity(2000);
+pub static mut LOCATION_CATEGORY_LAST_MONTHS_INDEX_MAP: IntHashMap<LocationId, LocationPeriodIds> = IntHashMap::with_capacity(2000);
+pub static mut LOCATION_CATEGORY_THIS_MONTHS_INDEX_MAP: IntHashMap<LocationId, LocationPeriodIds> = IntHashMap::with_capacity(2000);
+pub static mut LOCATION_CATEGORY_LAST_WEEKS_INDEX_MAP: IntHashMap<LocationId, LocationPeriodIds> = IntHashMap::with_capacity(2000);
+pub static mut LOCATION_CATEGORY_THIS_WEEKS_INDEX_MAP: IntHashMap<LocationId, LocationPeriodIds> = IntHashMap::with_capacity(2000);
+pub static mut LOCATION_CATEGORY_DAY_B4_YESTERDAYS_INDEX_MAP: IntHashMap<LocationId, LocationPeriodIds> = IntHashMap::with_capacity(2000);
+pub static mut LOCATION_CATEGORY_YESTERDAYS_INDEX_MAP: IntHashMap<LocationId, LocationPeriodIds> = IntHashMap::with_capacity(2000);
+pub static mut LOCATION_CATEGORY_TODAYS_INDEX_MAP: IntHashMap<LocationId, LocationPeriodIds> = IntHashMap::with_capacity(2000);
 
 /**
  *  The location/based poll rankings nested arrays by:
@@ -130,57 +152,63 @@ pub static mut TODAYS_CATEGORY_POLL_RANKINGS: Vec<Vec<VoteCount>> = Vec::new();
 /**
  * Random access current poll maps, needed for count and sum increments by the voting servers.
  *    Indexed by global PollIds
+ *
+ *  TODO: many not be needed, assuming that timezone is known at the time of
+ *  count and sum increments
  */
-pub static mut TODAY_1_D_POLL_MAP: IntHashMap<u64, OneDPoll> = IntHashMap::with_capacity(2000);
-pub static mut TODAY_2_D_POLL_MAP: IntHashMap<u64, TwoDPoll> = IntHashMap::with_capacity(2000);
-pub static mut TODAY_3_D_POLL_MAP: IntHashMap<u64, ThreeDPoll> = IntHashMap::with_capacity(2000);
-pub static mut THIS_WEEK_1_D_POLL_MAP: IntHashMap<u64, OneDPoll> = IntHashMap::with_capacity(2000);
-pub static mut THIS_WEEK_2_D_POLL_MAP: IntHashMap<u64, TwoDPoll> = IntHashMap::with_capacity(2000);
-pub static mut THIS_WEEK_3_D_POLL_MAP: IntHashMap<u64, ThreeDPoll> = IntHashMap::with_capacity(2000);
-pub static mut THIS_MONTH_1_D_POLL_MAP: IntHashMap<u64, OneDPoll> = IntHashMap::with_capacity(2000);
-pub static mut THIS_MONTH_2_D_POLL_MAP: IntHashMap<u64, TwoDPoll> = IntHashMap::with_capacity(2000);
-pub static mut THIS_MONTH_3_D_POLL_MAP: IntHashMap<u64, ThreeDPoll> = IntHashMap::with_capacity(2000);
+//pub static mut TODAY_1_D_POLL_MAP: IntHashMap<u64, OneDPoll> = IntHashMap::with_capacity(2000);
+//pub static mut TODAY_2_D_POLL_MAP: IntHashMap<u64, TwoDPoll> = IntHashMap::with_capacity(2000);
+//pub static mut TODAY_3_D_POLL_MAP: IntHashMap<u64, ThreeDPoll> = IntHashMap::with_capacity(2000);
+//pub static mut THIS_WEEK_1_D_POLL_MAP: IntHashMap<u64, OneDPoll> = IntHashMap::with_capacity(2000);
+//pub static mut THIS_WEEK_2_D_POLL_MAP: IntHashMap<u64, TwoDPoll> = IntHashMap::with_capacity(2000);
+//pub static mut THIS_WEEK_3_D_POLL_MAP: IntHashMap<u64, ThreeDPoll> = IntHashMap::with_capacity(2000);
+//pub static mut THIS_MONTH_1_D_POLL_MAP: IntHashMap<u64, OneDPoll> = IntHashMap::with_capacity(2000);
+//pub static mut THIS_MONTH_2_D_POLL_MAP: IntHashMap<u64, TwoDPoll> = IntHashMap::with_capacity(2000);
+//pub static mut THIS_MONTH_3_D_POLL_MAP: IntHashMap<u64, ThreeDPoll> = IntHashMap::with_capacity(2000);
 
 /**
 * Polls HashMap by timezone and global id.
 *  The actual poll counts are stored here.  They are accessed by the clients when they need
 *  sums and counts for a particular poll.
 */
-pub static mut TODAY_1_D_POLLS: Vec<IntHashMap<u64, OneDPoll>> = Vec::with_capacity(38);
-pub static mut TODAY_2_D_POLLS: Vec<IntHashMap<u64, TwoDPoll>> = Vec::with_capacity(38);
-pub static mut TODAY_3_D_POLLS: Vec<IntHashMap<u64, ThreeDPoll>> = Vec::with_capacity(38);
-pub static mut YESTERDAY_1_D_POLLS: Vec<IntHashMap<u64, OneDPoll>> = Vec::with_capacity(38);
-pub static mut YESTERDAY_2_D_POLLS: Vec<IntHashMap<u64, TwoDPoll>> = Vec::with_capacity(38);
-pub static mut YESTERDAY_3_D_POLLS: Vec<IntHashMap<u64, ThreeDPoll>> = Vec::with_capacity(38);
-pub static mut DAY_B4_YESTERDAY_1_D_POLLS: Vec<IntHashMap<u64, OneDPoll>> = Vec::with_capacity(38);
-pub static mut DAY_B4_YESTERDAY_2_D_POLLS: Vec<IntHashMap<u64, TwoDPoll>> = Vec::with_capacity(38);
-pub static mut DAY_B4_YESTERDAY_3_D_POLLS: Vec<IntHashMap<u64, ThreeDPoll>> = Vec::with_capacity(38);
-pub static mut THIS_WEEK_1_D_POLLS: Vec<IntHashMap<u64, OneDPoll>> = Vec::with_capacity(38);
-pub static mut THIS_WEEK_2_D_POLLS: Vec<IntHashMap<u64, TwoDPoll>> = Vec::with_capacity(38);
-pub static mut THIS_WEEK_3_D_POLLS: Vec<IntHashMap<u64, ThreeDPoll>> = Vec::with_capacity(38);
-pub static mut LAST_WEEK_1_D_POLLS: Vec<IntHashMap<u64, OneDPoll>> = Vec::with_capacity(38);
-pub static mut LAST_WEEK_2_D_POLLS: Vec<IntHashMap<u64, TwoDPoll>> = Vec::with_capacity(38);
-pub static mut LAST_WEEK_3_D_POLLS: Vec<IntHashMap<u64, ThreeDPoll>> = Vec::with_capacity(38);
-pub static mut THIS_MONTH_1_D__POLLS: Vec<IntHashMap<u64, OneDPoll>> = Vec::with_capacity(38);
-pub static mut THIS_MONTH_2_D_POLLS: Vec<IntHashMap<u64, TwoDPoll>> = Vec::with_capacity(38);
-pub static mut THIS_MONTH_3_D_POLLS: Vec<IntHashMap<u64, ThreeDPoll>> = Vec::with_capacity(38);
-pub static mut LAST_MONTH_1_D__POLLS: Vec<IntHashMap<u64, OneDPoll>> = Vec::with_capacity(38);
-pub static mut LAST_MONTH_2_D_POLLS: Vec<IntHashMap<u64, TwoDPoll>> = Vec::with_capacity(38);
-pub static mut LAST_MONTH_3_D_POLLS: Vec<IntHashMap<u64, ThreeDPoll>> = Vec::with_capacity(38);
+pub static mut TODAY_1_D_POLLS: Vec<IntHashMap<PollId, OneDPoll>> = Vec::with_capacity(38);
+pub static mut TODAY_2_D_POLLS: Vec<IntHashMap<PollId, TwoDPoll>> = Vec::with_capacity(38);
+pub static mut TODAY_3_D_POLLS: Vec<IntHashMap<PollId, ThreeDPoll>> = Vec::with_capacity(38);
+pub static mut YESTERDAY_1_D_POLLS: Vec<IntHashMap<PollId, OneDPoll>> = Vec::with_capacity(38);
+pub static mut YESTERDAY_2_D_POLLS: Vec<IntHashMap<PollId, TwoDPoll>> = Vec::with_capacity(38);
+pub static mut YESTERDAY_3_D_POLLS: Vec<IntHashMap<PollId, ThreeDPoll>> = Vec::with_capacity(38);
+pub static mut DAY_B4_YESTERDAY_1_D_POLLS: Vec<IntHashMap<PollId, OneDPoll>> = Vec::with_capacity(38);
+pub static mut DAY_B4_YESTERDAY_2_D_POLLS: Vec<IntHashMap<PollId, TwoDPoll>> = Vec::with_capacity(38);
+pub static mut DAY_B4_YESTERDAY_3_D_POLLS: Vec<IntHashMap<PollId, ThreeDPoll>> = Vec::with_capacity(38);
+pub static mut THIS_WEEK_1_D_POLLS: Vec<IntHashMap<PollId, OneDPoll>> = Vec::with_capacity(38);
+pub static mut THIS_WEEK_2_D_POLLS: Vec<IntHashMap<PollId, TwoDPoll>> = Vec::with_capacity(38);
+pub static mut THIS_WEEK_3_D_POLLS: Vec<IntHashMap<PollId, ThreeDPoll>> = Vec::with_capacity(38);
+pub static mut LAST_WEEK_1_D_POLLS: Vec<IntHashMap<PollId, OneDPoll>> = Vec::with_capacity(38);
+pub static mut LAST_WEEK_2_D_POLLS: Vec<IntHashMap<PollId, TwoDPoll>> = Vec::with_capacity(38);
+pub static mut LAST_WEEK_3_D_POLLS: Vec<IntHashMap<PollId, ThreeDPoll>> = Vec::with_capacity(38);
+pub static mut THIS_MONTH_1_D__POLLS: Vec<IntHashMap<PollId, OneDPoll>> = Vec::with_capacity(38);
+pub static mut THIS_MONTH_2_D_POLLS: Vec<IntHashMap<PollId, TwoDPoll>> = Vec::with_capacity(38);
+pub static mut THIS_MONTH_3_D_POLLS: Vec<IntHashMap<PollId, ThreeDPoll>> = Vec::with_capacity(38);
+pub static mut LAST_MONTH_1_D__POLLS: Vec<IntHashMap<PollId, OneDPoll>> = Vec::with_capacity(38);
+pub static mut LAST_MONTH_2_D_POLLS: Vec<IntHashMap<PollId, TwoDPoll>> = Vec::with_capacity(38);
+pub static mut LAST_MONTH_3_D_POLLS: Vec<IntHashMap<PollId, ThreeDPoll>> = Vec::with_capacity(38);
 
 
 /**
  * Underlying data structures
  */
+pub type DayId = u32;
+pub type WeekId = u32;
+pub type MonthId = u32;
 
 pub struct CachePeriodIds {
-    pub dayB4YesterdaysVcDayId: u32,
-    pub thisMonthsVcMonthId: u32,
-    pub thisWeeksVcWeekId: u32,
-    pub lastMonthsVcMonthId: u32,
-    pub lastWeeksVcWeekId: u32,
-    pub todaysVcDayId: u32,
-    pub yesterdaysVcDayId: u32,
+    pub dayB4YesterdaysVcDayId: DayId,
+    pub thisMonthsVcMonthId: MonthId,
+    pub thisWeeksVcWeekId: WeekId,
+    pub lastMonthsVcMonthId: MonthId,
+    pub lastWeeksVcWeekId: WeekId,
+    pub todaysVcDayId: DayId,
+    pub yesterdaysVcDayId: DayId,
 }
 
 impl CachePeriodIds {
@@ -224,13 +252,13 @@ impl CategoryPeriodPollRankings {
  *      and a map (by Global Id) of the category indexes for same time period
  */
 pub struct LocationPeriodIds {
-    pub locationCategoryCacheIndexMap: IntHashMap<u64, u32>,
-    pub locationCacheIndex: u32,
+    pub locationCategoryCacheIndexMap: IntHashMap<CategoryId, LocationCategoryCacheIndex>,
+    pub locationCacheIndex: CategoryCacheIndex,
 }
 
 impl LocationPeriodIds {
     pub fn new(
-        locationIndex: u32,
+        locationIndex: LocationCacheIndex,
         numCategories: usize,
     ) -> LocationPeriodIds {
         LocationPeriodIds {
@@ -251,9 +279,9 @@ Split by timezone:
  *      and an array (by time period+location specific category index) of location+category
  *          ranked vote counts
  */
-pub struct LocationPollRankings<'a> {
-    pub location: &'a Vec<VoteCount>,
-    pub categoryLocations: &'a Vec<Vec<VoteCount>>,
+pub struct LocationPollRankings {
+    pub location: Vec<VoteCount>,
+    pub categoryLocations: Vec<Vec<VoteCount>>,
 }
 
 /**
@@ -261,38 +289,15 @@ pub struct LocationPollRankings<'a> {
  *     Contains time ordered polls (in order of creation) for a particular location
  *         and a map/tree (by Global Category Id) of time ordered polls for location+category
  */
-pub struct LocationPollPrependLists<'a> {
-    location: &'a PrependList<'a>,
-    categoryLocations: &'a LsbShiftTree<PrependList<'a>>,
+pub struct LocationPollPrependLists {
+    // Inner vector is a page/frame (Ex: capped @ 1024) and outer vector grows
+    pub location: Vec<Vec<PollId>>,
+    // Custom fast no rehashing, fast insert datastructure
+    // for managing an unknown number of categories in a given location
+    pub categoryLocations: LsbShiftTree<Vec<Vec<PollId>>>,
 }
 
 
-/**
- *  We need a dynamically sized data structure for adding polls.  The data structure should be
- *  memory efficient but even more importantly should be computationally efficient.  HashMap
- *  is limited by its need to re-hash.  Hence this is a custom ...
- *
- *  Least Significant digit (bit shift operation based) tree.  It consists of branch and leaf nodes
- *  of variable depth.  It grows by occasionally adding a root node to a (sub)-branch, and otherwise
- *  adding child branches.  It is only fully locked up for read access when the root node is being
- *  replaced due to addition.
- *
- *  The final leafs are arrays of Global Poll Ids (defaulting to 1024)
- *
- *  It is computationally efficient (especially with higher branch counts) because navigation
- *  from a tree node to a tree node is based on bit shifting of the least significant digits
- *  and because of higher branch factors (defaults to 8 branches per node).
- *
- *  It is reasonably memory efficient and is acceptable from that point of view because it is only
- *  used for the future periods.
- */
-pub struct LsbShiftTree<T> {}
-
-impl<T> LsbShiftTree<T> {
-    pub fn new() -> LsbShiftTree<T> {
-        PollTree {}
-    }
-}
 
 
 /**
@@ -344,7 +349,7 @@ pub struct VoteCount {
     First 5 bits are for timezone, last 2 for for Type
     */
     pub pollTypeAndTz: u8,
-    pub pollId: u64,
+    pub pollId: PollId,
     pub count: u32,
 }
 
