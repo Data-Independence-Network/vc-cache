@@ -142,31 +142,31 @@ pub static mut THIS_MONTH_2_D_POLL_MAP: IntHashMap<u64, TwoDPoll> = IntHashMap::
 pub static mut THIS_MONTH_3_D_POLL_MAP: IntHashMap<u64, ThreeDPoll> = IntHashMap::with_capacity(2000);
 
 /**
-* Polls array by in-cache index, by timezone.
+* Polls HashMap by timezone and global id.
 *  The actual poll counts are stored here.  They are accessed by the clients when they need
 *  sums and counts for a particular poll.
 */
-pub static mut TODAY_1_D_POLLS: Vec<Vec<OneDPoll>> = Vec::with_capacity(38);
-pub static mut TODAY_2_D_POLLS: Vec<Vec<TwoDPoll>> = Vec::with_capacity(38);
-pub static mut TODAY_3_D_POLLS: Vec<Vec<ThreeDPoll>> = Vec::with_capacity(38);
-pub static mut YESTERDAY_1_D_POLLS: Vec<Vec<OneDPoll>> = Vec::with_capacity(38);
-pub static mut YESTERDAY_2_D_POLLS: Vec<Vec<TwoDPoll>> = Vec::with_capacity(38);
-pub static mut YESTERDAY_3_D_POLLS: Vec<Vec<ThreeDPoll>> = Vec::with_capacity(38);
-pub static mut DAY_B4_YESTERDAY_1_D_POLLS: Vec<Vec<OneDPoll>> = Vec::with_capacity(38);
-pub static mut DAY_B4_YESTERDAY_2_D_POLLS: Vec<Vec<TwoDPoll>> = Vec::with_capacity(38);
-pub static mut DAY_B4_YESTERDAY_3_D_POLLS: Vec<Vec<ThreeDPoll>> = Vec::with_capacity(38);
-pub static mut THIS_WEEK_1_D_POLLS: Vec<Vec<OneDPoll>> = Vec::with_capacity(38);
-pub static mut THIS_WEEK_2_D_POLLS: Vec<Vec<TwoDPoll>> = Vec::with_capacity(38);
-pub static mut THIS_WEEK_3_D_POLLS: Vec<Vec<ThreeDPoll>> = Vec::with_capacity(38);
-pub static mut LAST_WEEK_1_D_POLLS: Vec<Vec<OneDPoll>> = Vec::with_capacity(38);
-pub static mut LAST_WEEK_2_D_POLLS: Vec<Vec<TwoDPoll>> = Vec::with_capacity(38);
-pub static mut LAST_WEEK_3_D_POLLS: Vec<Vec<ThreeDPoll>> = Vec::with_capacity(38);
-pub static mut THIS_MONTH_1_D__POLLS: Vec<Vec<OneDPoll>> = Vec::with_capacity(38);
-pub static mut THIS_MONTH_2_D_POLLS: Vec<Vec<TwoDPoll>> = Vec::with_capacity(38);
-pub static mut THIS_MONTH_3_D_POLLS: Vec<Vec<ThreeDPoll>> = Vec::with_capacity(38);
-pub static mut LAST_MONTH_1_D__POLLS: Vec<Vec<OneDPoll>> = Vec::with_capacity(38);
-pub static mut LAST_MONTH_2_D_POLLS: Vec<Vec<TwoDPoll>> = Vec::with_capacity(38);
-pub static mut LAST_MONTH_3_D_POLLS: Vec<Vec<ThreeDPoll>> = Vec::with_capacity(38);
+pub static mut TODAY_1_D_POLLS: Vec<IntHashMap<u64, OneDPoll>> = Vec::with_capacity(38);
+pub static mut TODAY_2_D_POLLS: Vec<IntHashMap<u64, TwoDPoll>> = Vec::with_capacity(38);
+pub static mut TODAY_3_D_POLLS: Vec<IntHashMap<u64, ThreeDPoll>> = Vec::with_capacity(38);
+pub static mut YESTERDAY_1_D_POLLS: Vec<IntHashMap<u64, OneDPoll>> = Vec::with_capacity(38);
+pub static mut YESTERDAY_2_D_POLLS: Vec<IntHashMap<u64, TwoDPoll>> = Vec::with_capacity(38);
+pub static mut YESTERDAY_3_D_POLLS: Vec<IntHashMap<u64, ThreeDPoll>> = Vec::with_capacity(38);
+pub static mut DAY_B4_YESTERDAY_1_D_POLLS: Vec<IntHashMap<u64, OneDPoll>> = Vec::with_capacity(38);
+pub static mut DAY_B4_YESTERDAY_2_D_POLLS: Vec<IntHashMap<u64, TwoDPoll>> = Vec::with_capacity(38);
+pub static mut DAY_B4_YESTERDAY_3_D_POLLS: Vec<IntHashMap<u64, ThreeDPoll>> = Vec::with_capacity(38);
+pub static mut THIS_WEEK_1_D_POLLS: Vec<IntHashMap<u64, OneDPoll>> = Vec::with_capacity(38);
+pub static mut THIS_WEEK_2_D_POLLS: Vec<IntHashMap<u64, TwoDPoll>> = Vec::with_capacity(38);
+pub static mut THIS_WEEK_3_D_POLLS: Vec<IntHashMap<u64, ThreeDPoll>> = Vec::with_capacity(38);
+pub static mut LAST_WEEK_1_D_POLLS: Vec<IntHashMap<u64, OneDPoll>> = Vec::with_capacity(38);
+pub static mut LAST_WEEK_2_D_POLLS: Vec<IntHashMap<u64, TwoDPoll>> = Vec::with_capacity(38);
+pub static mut LAST_WEEK_3_D_POLLS: Vec<IntHashMap<u64, ThreeDPoll>> = Vec::with_capacity(38);
+pub static mut THIS_MONTH_1_D__POLLS: Vec<IntHashMap<u64, OneDPoll>> = Vec::with_capacity(38);
+pub static mut THIS_MONTH_2_D_POLLS: Vec<IntHashMap<u64, TwoDPoll>> = Vec::with_capacity(38);
+pub static mut THIS_MONTH_3_D_POLLS: Vec<IntHashMap<u64, ThreeDPoll>> = Vec::with_capacity(38);
+pub static mut LAST_MONTH_1_D__POLLS: Vec<IntHashMap<u64, OneDPoll>> = Vec::with_capacity(38);
+pub static mut LAST_MONTH_2_D_POLLS: Vec<IntHashMap<u64, TwoDPoll>> = Vec::with_capacity(38);
+pub static mut LAST_MONTH_3_D_POLLS: Vec<IntHashMap<u64, ThreeDPoll>> = Vec::with_capacity(38);
 
 
 /**
@@ -344,7 +344,7 @@ pub struct VoteCount {
     First 5 bits are for timezone, last 2 for for Type
     */
     pub pollTypeAndTz: u8,
-    pub tzAndPeriodPollId: u32,
+    pub pollId: u64,
     pub count: u32,
 }
 
@@ -352,7 +352,6 @@ pub struct VoteCount {
  * Poll sums and counts for a 3 dimensional poll.
  */
 pub struct ThreeDPoll {
-    globalPollId: u64,
     dim1dir1Over: u8,
     dim1dir2Over: u8,
     dim2dir1Over: u8,
@@ -372,7 +371,6 @@ pub struct ThreeDPoll {
  * Poll sums and counts for a 2 dimensional poll.
  */
 pub struct TwoDPoll {
-    pollId: u64,
     dim1dir1Over: u8,
     dim1dir2Over: u8,
     dim2dir1Over: u8,
@@ -388,7 +386,6 @@ pub struct TwoDPoll {
  * Poll sums and counts for a 1 dimensional poll.
  */
 pub struct OneDPoll {
-    pollId: u64,
     dim1dir1Over: u8,
     dim1dir2Over: u8,
     dim1dir1Sum: u32,

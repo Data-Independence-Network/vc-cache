@@ -7,10 +7,21 @@ use super::super::super::super::cache::cache::VoteCount;
 use super::super::super::super::cache::cache::LocationPollRankings;
 use super::super::super::super::data::byte_counts::ByteCounts;
 
-use super::location_and_loc_category::get1ByteRecentPolls;
+use super::location_and_loc_category::INITIAL_RESPONSE_VECTOR_SIZE_2_POLL_BYTES;
+use super::location_and_loc_category::INITIAL_RESPONSE_VECTOR_SIZE_3_POLL_BYTES;
+use super::location_and_loc_category::INITIAL_RESPONSE_VECTOR_SIZE_4_POLL_BYTES;
+use super::location_and_loc_category::INITIAL_RESPONSE_VECTOR_SIZE_5_POLL_BYTES;
+use super::location_and_loc_category::INITIAL_RESPONSE_VECTOR_SIZE_6_POLL_BYTES;
+use super::location_and_loc_category::INITIAL_RESPONSE_VECTOR_SIZE_7_POLL_BYTES;
+use super::location_and_loc_category::INITIAL_RESPONSE_VECTOR_SIZE_8_POLL_BYTES;
 use super::location_and_loc_category::get2ByteRecentPolls;
 use super::location_and_loc_category::get3ByteRecentPolls;
 use super::location_and_loc_category::get4ByteRecentPolls;
+use super::location_and_loc_category::get4ByteRecentPolls;
+use super::location_and_loc_category::get5ByteRecentPolls;
+use super::location_and_loc_category::get6ByteRecentPolls;
+use super::location_and_loc_category::get7ByteRecentPolls;
+use super::location_and_loc_category::get8ByteRecentPolls;
 
 pub fn get_todays_location_rankings_by_global_id(
     vcDayId: u32,
@@ -473,13 +484,6 @@ fn get_location_rankings_with_location_cache_index(
     };
 
     match maxPollNumberBytes {
-        1 => {
-            let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_1_POLL_BYTES);
-            response.push(0b00000001);
-            response.extend_from_slice(&locationCacheIndexBytes);
-
-            return get1ByteRecentPolls(*voteCountsForLocation, firstRecordIndex, response);
-        }
         2 => {
             let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_2_POLL_BYTES);
             response.push(0b00000010);
@@ -496,6 +500,34 @@ fn get_location_rankings_with_location_cache_index(
         }
         4 => {
             let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_4_POLL_BYTES);
+            response.push(0b00000100);
+            response.extend_from_slice(&locationCacheIndexBytes);
+
+            return get4ByteRecentPolls(*voteCountsForLocation, firstRecordIndex, response);
+        }
+        5 => {
+            let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_5_POLL_BYTES);
+            response.push(0b00000101);
+            response.extend_from_slice(&locationCacheIndexBytes);
+
+            return get4ByteRecentPolls(*voteCountsForLocation, firstRecordIndex, response);
+        }
+        6 => {
+            let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_6_POLL_BYTES);
+            response.push(0b00000110);
+            response.extend_from_slice(&locationCacheIndexBytes);
+
+            return get4ByteRecentPolls(*voteCountsForLocation, firstRecordIndex, response);
+        }
+        7 => {
+            let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_7_POLL_BYTES);
+            response.push(0b00000111);
+            response.extend_from_slice(&locationCacheIndexBytes);
+
+            return get4ByteRecentPolls(*voteCountsForLocation, firstRecordIndex, response);
+        }
+        8 => {
+            let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_8_POLL_BYTES);
             response.push(0b00000000);
             response.extend_from_slice(&locationCacheIndexBytes);
 
@@ -516,12 +548,6 @@ fn get_location_rankings(
     let voteCountsForLocation = locationPollRankings.location;
 
     match maxPollNumberBytes {
-        1 => {
-            let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_1_POLL_BYTES);
-            response.push(0b00000001);
-
-            return get1ByteRecentPolls(*voteCountsForLocation, firstRecordIndex, response);
-        }
         2 => {
             let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_2_POLL_BYTES);
             response.push(0b00000010);
@@ -536,6 +562,30 @@ fn get_location_rankings(
         }
         4 => {
             let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_4_POLL_BYTES);
+            response.push(0b00000100);
+
+            return get4ByteRecentPolls(*voteCountsForLocation, firstRecordIndex, response);
+        }
+        5 => {
+            let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_5_POLL_BYTES);
+            response.push(0b00000101);
+
+            return get4ByteRecentPolls(*voteCountsForLocation, firstRecordIndex, response);
+        }
+        6 => {
+            let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_6_POLL_BYTES);
+            response.push(0b00000110);
+
+            return get4ByteRecentPolls(*voteCountsForLocation, firstRecordIndex, response);
+        }
+        7 => {
+            let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_7_POLL_BYTES);
+            response.push(0b00000111);
+
+            return get4ByteRecentPolls(*voteCountsForLocation, firstRecordIndex, response);
+        }
+        8 => {
+            let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_8_POLL_BYTES);
             response.push(0b00000000);
 
             return get4ByteRecentPolls(*voteCountsForLocation, firstRecordIndex, response);

@@ -10,13 +10,65 @@ use super::super::super::super::data::byte_counts::ByteCounts;
 // NOTE: max page size must fin into u16
 const PAGE_SIZE: usize = 1024;
 
+const INITIAL_RESPONSE_VECTOR_SIZE_8_POLL_BYTES: usize =
+// space for the leading header byte
+    1 +
+        // space for category cache index (if any
+        4 +
+        PAGE_SIZE +
+        // space for poll ids & vote counts
+        PAGE_SIZE * (8 + 3) +
+        // space for the byte counts
+        PAGE_SIZE / 4 +
+        // space for trailing size bytes
+        2;
+
+const INITIAL_RESPONSE_VECTOR_SIZE_7_POLL_BYTES: usize =
+// space for the leading header byte
+    1 +
+        // space for category cache index (if any
+        4 +
+        PAGE_SIZE +
+        // space for poll ids & vote counts
+        PAGE_SIZE * (7 + 3) +
+        // space for the byte counts
+        PAGE_SIZE / 4 +
+        // space for trailing size bytes
+        2;
+
+const INITIAL_RESPONSE_VECTOR_SIZE_6_POLL_BYTES: usize =
+// space for the leading header byte
+    1 +
+        // space for category cache index (if any
+        4 +
+        PAGE_SIZE +
+        // space for poll ids & vote counts
+        PAGE_SIZE * (6 + 3) +
+        // space for the byte counts
+        PAGE_SIZE / 4 +
+        // space for trailing size bytes
+        2;
+
+const INITIAL_RESPONSE_VECTOR_SIZE_5_POLL_BYTES: usize =
+// space for the leading header byte
+    1 +
+        // space for category cache index (if any
+        4 +
+        PAGE_SIZE +
+        // space for poll ids & vote counts
+        PAGE_SIZE * (5 + 3) +
+        // space for the byte counts
+        PAGE_SIZE / 4 +
+        // space for trailing size bytes
+        2;
+
 const INITIAL_RESPONSE_VECTOR_SIZE_4_POLL_BYTES: usize =
 // space for the leading header byte
     1 +
         // space for category cache index (if any
         4 +
         PAGE_SIZE +
-        // space for category ids & vote counts
+        // space for poll ids & vote counts
         PAGE_SIZE * (4 + 3) +
         // space for the byte counts
         PAGE_SIZE / 4 +
@@ -28,7 +80,7 @@ const INITIAL_RESPONSE_VECTOR_SIZE_3_POLL_BYTES: usize =
     1 +
         // space for category cache index (if any
         4 +
-        // space for category ids & vote counts
+        // space for po ids & vote counts
         PAGE_SIZE * (3 + 3)
         // space for the byte counts
         + PAGE_SIZE / 4 +
@@ -42,18 +94,6 @@ const INITIAL_RESPONSE_VECTOR_SIZE_2_POLL_BYTES: usize =
         4 +
         // space for category ids & vote counts
         PAGE_SIZE * (2 + 3)
-        // space for the byte counts
-        + PAGE_SIZE / 4 +
-        // space for trailing size bytes
-        2;
-
-const INITIAL_RESPONSE_VECTOR_SIZE_1_POLL_BYTES: usize =
-// space for the leading header byte
-    1 +
-        // space for category cache index (if any
-        4 +
-        // space for category ids & vote counts
-        PAGE_SIZE * (1 + 3)
         // space for the byte counts
         + PAGE_SIZE / 4 +
         // space for trailing size bytes
@@ -343,13 +383,6 @@ fn get_category_rankings_with_category_cache_index(
 
 
     match maxPollNumberBytes {
-        1 => {
-            let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_1_POLL_BYTES);
-            response.push(0b00000001);
-            response.extend_from_slice(&categoryCacheIndexBytes);
-
-            return get1ByteRecentPolls(voteCountsForCategory, firstRecordIndex, response);
-        }
         2 => {
             let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_2_POLL_BYTES);
             response.push(0b00000010);
@@ -366,6 +399,34 @@ fn get_category_rankings_with_category_cache_index(
         }
         4 => {
             let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_4_POLL_BYTES);
+            response.push(0b00000100);
+            response.extend_from_slice(&categoryCacheIndexBytes);
+
+            return get4ByteRecentPolls(voteCountsForCategory, firstRecordIndex, response);
+        }
+        5 => {
+            let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_5_POLL_BYTES);
+            response.push(0b00000101);
+            response.extend_from_slice(&categoryCacheIndexBytes);
+
+            return get4ByteRecentPolls(voteCountsForCategory, firstRecordIndex, response);
+        }
+        6 => {
+            let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_6_POLL_BYTES);
+            response.push(0b00000110);
+            response.extend_from_slice(&categoryCacheIndexBytes);
+
+            return get4ByteRecentPolls(voteCountsForCategory, firstRecordIndex, response);
+        }
+        7 => {
+            let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_7_POLL_BYTES);
+            response.push(0b00000111);
+            response.extend_from_slice(&categoryCacheIndexBytes);
+
+            return get4ByteRecentPolls(voteCountsForCategory, firstRecordIndex, response);
+        }
+        8 => {
+            let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_8_POLL_BYTES);
             response.push(0b00000000);
             response.extend_from_slice(&categoryCacheIndexBytes);
 
@@ -385,11 +446,6 @@ fn get_category_rankings(
     let voteCountsForCategory = givenPeriodCategoryPollRankings[categoryIndex];
 
     match maxPollNumberBytes {
-        1 => {
-            let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_1_POLL_BYTES);
-            response.push(0b00000001);
-            return get1ByteRecentPolls(voteCountsForCategory, firstRecordIndex, response);
-        }
         2 => {
             let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_2_POLL_BYTES);
             response.push(0b00000010);
@@ -402,11 +458,215 @@ fn get_category_rankings(
         }
         4 => {
             let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_4_POLL_BYTES);
+            response.push(0b00000100);
+            return get4ByteRecentPolls(voteCountsForCategory, firstRecordIndex, response);
+        }
+        5 => {
+            let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_5_POLL_BYTES);
+            response.push(0b00000101);
+            return get4ByteRecentPolls(voteCountsForCategory, firstRecordIndex, response);
+        }
+        6 => {
+            let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_6_POLL_BYTES);
+            response.push(0b00000110);
+            return get4ByteRecentPolls(voteCountsForCategory, firstRecordIndex, response);
+        }
+        7 => {
+            let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_7_POLL_BYTES);
+            response.push(0b00000111);
+            return get4ByteRecentPolls(voteCountsForCategory, firstRecordIndex, response);
+        }
+        8 => {
+            let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_8_POLL_BYTES);
             response.push(0b00000000);
             return get4ByteRecentPolls(voteCountsForCategory, firstRecordIndex, response);
         }
     }
 //            return codes::INVALID_CATEGORY_RESPONSE;
+}
+
+#[inline]
+fn get8ByteRecentPolls(
+    pollRankings: Vec<VoteCount>,
+    startingIndex: usize,
+    mut response: Vec<u8>,
+) -> Vec<u8> {
+    let mut iterator = pollRankings.iter().skip(startingIndex);
+    let mut voteCountsSizes = ByteCounts::new(PAGE_SIZE);
+
+    for x in 0...PAGE_SIZE {
+        match iterator.next() {
+            None => break,
+            Some(voteCount) => {
+                response.push(voteCount.pollTypeAndTz);
+
+                let pollIdBytes: [u8; 8] = unsafe {
+                    // Poll Id in the period of a given time zone
+                    std::mem::transmute(*voteCount.tzAndPeriodPollId);
+                };
+                // TODO: ALWAYS verify Big fs Little Endianness
+                response.extend_from_slice(&pollIdBytes);
+
+                let countBytes: [u8; 4] = unsafe {
+                    std::mem::transmute(*voteCount.count);
+                };
+                if countBytes[0] != 0 {
+                    response.extend_from_slice(&countBytes);
+                    voteCountsSizes.add4();
+                } else if countBytes[1] != 0 {
+                    response.extend_from_slice(&countBytes[1..3]);
+                    voteCountsSizes.add3();
+                } else if countBytes[2] != 0 {
+                    response.extend_from_slice(&countBytes[2..3]);
+                    voteCountsSizes.add2();
+                } else {
+                    response.push(countBytes[3]);
+                    voteCountsSizes.add1();
+                }
+            }
+        }
+    }
+    voteCountsSizes.append(response);
+
+    return response;
+}
+
+#[inline]
+fn get7ByteRecentPolls(
+    pollRankings: Vec<VoteCount>,
+    startingIndex: usize,
+    mut response: Vec<u8>,
+) -> Vec<u8> {
+    let mut iterator = pollRankings.iter().skip(startingIndex);
+    let mut voteCountsSizes = ByteCounts::new(PAGE_SIZE);
+
+    for x in 0...PAGE_SIZE {
+        match iterator.next() {
+            None => break,
+            Some(voteCount) => {
+                response.push(voteCount.pollTypeAndTz);
+
+                let pollIdBytes: [u8; 8] = unsafe {
+                    // Poll Id in the period of a given time zone
+                    std::mem::transmute(*voteCount.tzAndPeriodPollId);
+                };
+                // TODO: ALWAYS verify Big fs Little Endianness
+                response.extend_from_slice(&pollIdBytes[1..7]);
+
+                let countBytes: [u8; 4] = unsafe {
+                    std::mem::transmute(*voteCount.count);
+                };
+                if countBytes[0] != 0 {
+                    response.extend_from_slice(&countBytes);
+                    voteCountsSizes.add4();
+                } else if countBytes[1] != 0 {
+                    response.extend_from_slice(&countBytes[1..3]);
+                    voteCountsSizes.add3();
+                } else if countBytes[2] != 0 {
+                    response.extend_from_slice(&countBytes[2..3]);
+                    voteCountsSizes.add2();
+                } else {
+                    response.push(countBytes[3]);
+                    voteCountsSizes.add1();
+                }
+            }
+        }
+    }
+    voteCountsSizes.append(response);
+
+    return response;
+}
+
+#[inline]
+fn get6ByteRecentPolls(
+    pollRankings: Vec<VoteCount>,
+    startingIndex: usize,
+    mut response: Vec<u8>,
+) -> Vec<u8> {
+    let mut iterator = pollRankings.iter().skip(startingIndex);
+    let mut voteCountsSizes = ByteCounts::new(PAGE_SIZE);
+
+    for x in 0...PAGE_SIZE {
+        match iterator.next() {
+            None => break,
+            Some(voteCount) => {
+                response.push(voteCount.pollTypeAndTz);
+
+                let pollIdBytes: [u8; 8] = unsafe {
+                    // Poll Id in the period of a given time zone
+                    std::mem::transmute(*voteCount.tzAndPeriodPollId);
+                };
+                // TODO: ALWAYS verify Big fs Little Endianness
+                response.extend_from_slice(&pollIdBytes[2..7]);
+
+                let countBytes: [u8; 4] = unsafe {
+                    std::mem::transmute(*voteCount.count);
+                };
+                if countBytes[0] != 0 {
+                    response.extend_from_slice(&countBytes);
+                    voteCountsSizes.add4();
+                } else if countBytes[1] != 0 {
+                    response.extend_from_slice(&countBytes[1..3]);
+                    voteCountsSizes.add3();
+                } else if countBytes[2] != 0 {
+                    response.extend_from_slice(&countBytes[2..3]);
+                    voteCountsSizes.add2();
+                } else {
+                    response.push(countBytes[3]);
+                    voteCountsSizes.add1();
+                }
+            }
+        }
+    }
+    voteCountsSizes.append(response);
+
+    return response;
+}
+
+#[inline]
+fn get5ByteRecentPolls(
+    pollRankings: Vec<VoteCount>,
+    startingIndex: usize,
+    mut response: Vec<u8>,
+) -> Vec<u8> {
+    let mut iterator = pollRankings.iter().skip(startingIndex);
+    let mut voteCountsSizes = ByteCounts::new(PAGE_SIZE);
+
+    for x in 0...PAGE_SIZE {
+        match iterator.next() {
+            None => break,
+            Some(voteCount) => {
+                response.push(voteCount.pollTypeAndTz);
+
+                let pollIdBytes: [u8; 8] = unsafe {
+                    // Poll Id in the period of a given time zone
+                    std::mem::transmute(*voteCount.tzAndPeriodPollId);
+                };
+                // TODO: ALWAYS verify Big fs Little Endianness
+                response.extend_from_slice(&pollIdBytes[3..7]);
+
+                let countBytes: [u8; 4] = unsafe {
+                    std::mem::transmute(*voteCount.count);
+                };
+                if countBytes[0] != 0 {
+                    response.extend_from_slice(&countBytes);
+                    voteCountsSizes.add4();
+                } else if countBytes[1] != 0 {
+                    response.extend_from_slice(&countBytes[1..3]);
+                    voteCountsSizes.add3();
+                } else if countBytes[2] != 0 {
+                    response.extend_from_slice(&countBytes[2..3]);
+                    voteCountsSizes.add2();
+                } else {
+                    response.push(countBytes[3]);
+                    voteCountsSizes.add1();
+                }
+            }
+        }
+    }
+    voteCountsSizes.append(response);
+
+    return response;
 }
 
 #[inline]
@@ -424,11 +684,12 @@ fn get4ByteRecentPolls(
             Some(voteCount) => {
                 response.push(voteCount.pollTypeAndTz);
 
-                let tzAndPeriodPollIdBytes: [u8; 4] = unsafe {
+                let pollIdBytes: [u8; 8] = unsafe {
                     // Poll Id in the period of a given time zone
                     std::mem::transmute(*voteCount.tzAndPeriodPollId);
                 };
-                response.extend_from_slice(&tzAndPeriodPollIdBytes);
+                // TODO: ALWAYS verify Big fs Little Endianness
+                response.extend_from_slice(&pollIdBytes[4..7]);
 
                 let countBytes: [u8; 4] = unsafe {
                     std::mem::transmute(*voteCount.count);
@@ -469,11 +730,12 @@ fn get3ByteRecentPolls(
             Some(voteCount) => {
                 response.push(voteCount.pollTypeAndTz);
 
-                let tzAndPeriodPollIdBytes: [u8; 4] = unsafe {
+                let pollIdBytes: [u8; 8] = unsafe {
                     // Poll Id in the period of a given time zone
                     std::mem::transmute(*voteCount.tzAndPeriodPollId);
                 };
-                response.extend_from_slice(&tzAndPeriodPollIdBytes[1..3]);
+                // TODO: ALWAYS verify Big fs Little Endianness
+                response.extend_from_slice(&pollIdBytes[5..7]);
 
                 let countBytes: [u8; 4] = unsafe {
                     std::mem::transmute(*voteCount.count);
@@ -514,56 +776,12 @@ fn get2ByteRecentPolls(
             Some(voteCount) => {
                 response.push(voteCount.pollTypeAndTz);
 
-                let tzAndPeriodPollIdBytes: [u8; 4] = unsafe {
+                let pollIdBytes: [u8; 8] = unsafe {
                     // Poll Id in the period of a given time zone
                     std::mem::transmute(*voteCount.tzAndPeriodPollId);
                 };
-                response.extend_from_slice(&tzAndPeriodPollIdBytes[2..3]);
-
-                let countBytes: [u8; 4] = unsafe {
-                    std::mem::transmute(*voteCount.count);
-                };
-                if countBytes[0] != 0 {
-                    response.extend_from_slice(&countBytes);
-                    voteCountsSizes.add4();
-                } else if countBytes[1] != 0 {
-                    response.extend_from_slice(&countBytes[1..3]);
-                    voteCountsSizes.add3();
-                } else if countBytes[2] != 0 {
-                    response.extend_from_slice(&countBytes[2..3]);
-                    voteCountsSizes.add2();
-                } else {
-                    response.push(countBytes[3]);
-                    voteCountsSizes.add1();
-                }
-            }
-        }
-    }
-    voteCountsSizes.append(response);
-
-    return response;
-}
-
-#[inline]
-fn get1ByteRecentPolls(
-    pollRankings: Vec<VoteCount>,
-    startingIndex: usize,
-    mut response: Vec<u8>,
-) -> Vec<u8> {
-    let mut iterator = pollRankings.iter().skip(startingIndex);
-    let mut voteCountsSizes = ByteCounts::new(PAGE_SIZE);
-
-    for x in 0...PAGE_SIZE {
-        match iterator.next() {
-            None => break,
-            Some(voteCount) => {
-                response.push(voteCount.pollTypeAndTz);
-
-                let tzAndPeriodPollIdBytes: [u8; 4] = unsafe {
-                    // Poll Id in the period of a given time zone
-                    std::mem::transmute(*voteCount.tzAndPeriodPollId);
-                };
-                response.push(tzAndPeriodPollIdBytes[3]);
+                // TODO: ALWAYS verify Big fs Little Endianness
+                response.extend_from_slice(&pollIdBytes[6..7]);
 
                 let countBytes: [u8; 4] = unsafe {
                     std::mem::transmute(*voteCount.count);
