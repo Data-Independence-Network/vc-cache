@@ -21,32 +21,36 @@
  *  A Hash Trie Map optimized for integer keys and
  *
  */
-pub struct LsbShiftTree<T> {
+pub struct GlobalNode<T> {
     rootNode:Vec<Node<T>>,
-    rootBranchFactor: usize,
-    branchFactor: usize,
 }
 
-impl<T> LsbShiftTree<T> {
-    pub fn with_branch_factor(
-        rootBranchFactor: usize,
-        branchFactor: usize
-    ) -> LsbShiftTree<T> {
+impl<T> GlobalNode<T> {
+    pub fn new() -> GlobalNode<T> {
         LsbShiftTree {
-            rootNode: Vec::with_capacity(rootBranchFactor),
-            rootBranchFactor,
-            branchFactor
+            rootNode: Vec::with_capacity(16777216),
         }
     }
 
     pub fn set(mut self, key: u64, value: T) {
+        let leafIndex = key & 0x00000fffu64;
 
-        match rootNode[key << 48] {
+        match self.rootNode.get(leafIndex) {
             None => {
-
+                self.rootNode[leafIndex] = value;
             }
             Some(node) => {
-                
+                let subKey = key >> 24;
+                match node {
+                    Value(value) => {
+                        let childNode = Node::new();
+                        childNode.set(subKey, value);
+                        self.rootNode[leafIndex] = childNode;
+                    }
+                    ChildNodes(childNode) => {
+                        childNode.set(subKey, value);
+                    }
+                }
             }
         }
     }
@@ -56,11 +60,72 @@ impl<T> LsbShiftTree<T> {
     }
 }
 
-struct Node<T> {
-    value: Value<T>
+struct NestedNode<T> {
+    value: Vec<Value<T>>
+}
+
+impl<T> NestedNode<T> {
+    pub fn new() {
+        Node {
+            value: Vec::with_capacity(8)
+        }
+    }
+
+    pub fn set(mut self, key: usize, value: T) {
+        let mut leafIndex = key & 0x0000000fu64;
+        let mut subKey = key;
+
+        let mut array = self.value;
+        loop {
+        match array.get(leafIndex) {
+            None => {
+                array[leafIndex] = Value::Value(value);
+                return;
+            }
+            Some(node) => {
+                subKey = subKey >> 8;
+                match node {
+                    Value(existingKey, value) => {
+                        
+                        let data = Vec::with_capacity(8);
+                        newValue = Value::ChildNode(data);
+                        let childNode = Node::new();
+                        childNode.set(subKey, value);
+                        array[leafIndex] = childNode;
+                        return;
+                    }
+                    ChildNodes(childArray) => {
+                        leafIndex = subKey & 0x0000000fu64;
+                        array = childArray;
+                    }
+                }
+            }
+        }
+        }
+    }
+
+    pub fn get(self, key: usize) -> Option<V> {
+        let leafIndex = key & 0x0000000fu64;
+
+        match self.value.get(leafIndex) {
+            None => {
+                return Option::None;
+            }
+            Some(node) => {
+                match node {
+                    Value(value) => {
+                        return Option::Some(value);
+                    }
+                    ChildNodes(childNode) => {
+                        return childNode.get(key >> 8);
+                    }
+                }
+            }
+        }
+    }
 }
 
 enum Value<T> {
-    Value(T),
-    ChildNodes(Vec<Node<T>>)
+    Value(usize, T),
+    ChildNode(Vec<Value<T>>)
 }
