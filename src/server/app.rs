@@ -22,6 +22,11 @@ use super::super::logic::serve::recent::category::get_next_months_category_polls
 use super::super::logic::serve::recent::category::get_next_weeks_category_polls;
 use super::super::logic::serve::recent::category::get_tomorrows_category_polls;
 
+use super::super::logic::serve::recent::category::get_day_after_tomorrows_category_polls;
+use super::super::logic::serve::recent::category::get_next_months_category_polls;
+use super::super::logic::serve::recent::category::get_next_weeks_category_polls;
+use super::super::logic::serve::recent::category::get_tomorrows_category_polls;
+
 use super::super::logic::serve::recent::location::get_day_after_tomorrows_location_polls;
 use super::super::logic::serve::recent::location::get_next_months_location_polls;
 use super::super::logic::serve::recent::location::get_next_weeks_location_polls;
@@ -135,7 +140,6 @@ impl<T: Context + Send> App<T> {
         request_body: &[u8],
     ) -> Vec<u8> {
         match path {
-
             /**
              *
              *  POLL RANKINGS
@@ -649,48 +653,52 @@ impl<T: Context + Send> App<T> {
 
             // Recent Polls by Location
 
-            codes::URL_NEXT_MONTHS_LOCATION_POLLS => {
-
-            }
-        codes::URL_NEXT_WEEKS_LOCATION_POLLS => {
-
-        }
-        codes::URL_TOMORROWS_LOCATION_POLLS => {
-
-        }
-        codes::URL_DAY_AFTER_TOMORROWS_LOCATION_POLLS => {
-
-        }
+            codes::URL_NEXT_MONTHS_LOCATION_POLLS => {}
+            codes::URL_NEXT_WEEKS_LOCATION_POLLS => {}
+            codes::URL_TOMORROWS_LOCATION_POLLS => {}
+            codes::URL_DAY_AFTER_TOMORROWS_LOCATION_POLLS => {}
 
             // Recent Polls by Category
 
             codes::URL_NEXT_MONTHS_CATEGORY_POLLS => {
-
+                if wrongRequestLength12(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (blockNumber, globalCategoryId) = readIntAndLong(request_body);
+                    get_next_months_category_polls(blockNumber, globalCategoryId);
+                }
             }
-        codes::URL_NEXT_WEEKS_CATEGORY_POLLS => {
-
-        }
-        codes::URL_TOMORROWS_CATEGORY_POLLS => {
-
-        }
-        codes::URL_DAY_AFTER_TOMORROWS_CATEGORY_POLLS => {
-
-        }
+            codes::URL_NEXT_WEEKS_CATEGORY_POLLS => {
+                if wrongRequestLength12(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (blockNumber, globalCategoryId) = readIntAndLong(request_body);
+                    get_next_weeks_category_polls(blockNumber, globalCategoryId);
+                }
+            }
+            codes::URL_TOMORROWS_CATEGORY_POLLS => {
+                if wrongRequestLength12(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (blockNumber, globalCategoryId) = readIntAndLong(request_body);
+                    get_tomorrows_category_polls(blockNumber, globalCategoryId);
+                }
+            }
+            codes::URL_DAY_AFTER_TOMORROWS_CATEGORY_POLLS => {
+                if wrongRequestLength12(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (blockNumber, globalCategoryId) = readIntAndLong(request_body);
+                    get_day_after_tomorrows_category_polls(blockNumber, globalCategoryId);
+                }
+            }
 
             // Recent Polls by Location Category
 
-            codes::URL_NEXT_MONTHS_LOCATION_CATEGORY_POLLS => {
-
-            }
-            codes::URL_NEXT_WEEKS_LOCATION_CATEGORY_POLLS => {
-
-            }
-            codes::URL_TOMORROWS_LOCATION_CATEGORY_POLLS => {
-
-            }
-            codes::URL_DAY_AFTER_TOMORROWS_LOCATION_CATEGORY_POLLS => {
-
-            }
+            codes::URL_NEXT_MONTHS_LOCATION_CATEGORY_POLLS => {}
+            codes::URL_NEXT_WEEKS_LOCATION_CATEGORY_POLLS => {}
+            codes::URL_TOMORROWS_LOCATION_CATEGORY_POLLS => {}
+            codes::URL_DAY_AFTER_TOMORROWS_LOCATION_CATEGORY_POLLS => {}
 
             _ => {
                 codes::INVALID_DATA_FORMAT_RESPONSE
@@ -738,6 +746,15 @@ fn wrongRequestLength24(requestBody: &[u8]) -> boolean {
 #[inline]
 fn wrongRequestLength28(requestBody: &[u8]) -> boolean {
     requestBody.len() != 28
+}
+
+#[inline]
+fn readIntAndLong(requestBody: &[u8]) -> (u32, u64) {
+    let mut requestDataReader = Cursor::new(requestBody);
+    return (
+        requestDataReader.read_u32::<BigEndian>().unwrap(),
+        requestDataReader.read_u64::<BigEndian>().unwrap()
+    );
 }
 
 #[inline]

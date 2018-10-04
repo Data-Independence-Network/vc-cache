@@ -383,13 +383,6 @@ fn get_category_rankings_with_category_cache_index(
 
 
     match maxPollNumberBytes {
-        2 => {
-            let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_2_POLL_BYTES);
-            response.push(0b00000010);
-            response.extend_from_slice(&categoryCacheIndexBytes);
-
-            return get2ByteRecentPolls(voteCountsForCategory, firstRecordIndex, response);
-        }
         3 => {
             let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_3_POLL_BYTES);
             response.push(0b00000011);
@@ -403,6 +396,13 @@ fn get_category_rankings_with_category_cache_index(
             response.extend_from_slice(&categoryCacheIndexBytes);
 
             return get4ByteRecentPolls(voteCountsForCategory, firstRecordIndex, response);
+        }
+        2 => {
+            let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_2_POLL_BYTES);
+            response.push(0b00000010);
+            response.extend_from_slice(&categoryCacheIndexBytes);
+
+            return get2ByteRecentPolls(voteCountsForCategory, firstRecordIndex, response);
         }
         5 => {
             let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_5_POLL_BYTES);
@@ -446,11 +446,6 @@ fn get_category_rankings(
     let voteCountsForCategory = givenPeriodCategoryPollRankings[categoryIndex];
 
     match maxPollNumberBytes {
-        2 => {
-            let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_2_POLL_BYTES);
-            response.push(0b00000010);
-            return get2ByteRecentPolls(voteCountsForCategory, firstRecordIndex, response);
-        }
         3 => {
             let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_3_POLL_BYTES);
             response.push(0b00000011);
@@ -460,6 +455,11 @@ fn get_category_rankings(
             let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_4_POLL_BYTES);
             response.push(0b00000100);
             return get4ByteRecentPolls(voteCountsForCategory, firstRecordIndex, response);
+        }
+        2 => {
+            let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_2_POLL_BYTES);
+            response.push(0b00000010);
+            return get2ByteRecentPolls(voteCountsForCategory, firstRecordIndex, response);
         }
         5 => {
             let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_5_POLL_BYTES);

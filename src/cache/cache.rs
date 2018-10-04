@@ -1,4 +1,4 @@
-use super::super::data::prepend::LsbShiftTree;
+use super::super::data::prepend::GlobalNode;
 use int_hash::IntHashMap;
 
 
@@ -30,13 +30,17 @@ pub static mut dayAfterTomorrowIds: [u32; 38] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 */
 pub static mut LAST_MONTHS_POLL_ID_BYTE_COUNTS: Vec<u8> = Vec::with_capacity(39);
 pub static mut THIS_MONTHS_POLL_ID_BYTE_COUNTS: Vec<u8> = Vec::with_capacity(39);
+pub static mut NEXT_MONTHS_POLL_ID_BYTE_COUNTS: Vec<u8> = Vec::with_capacity(39);
 
 pub static mut LAST_WEEKS_POLL_ID_BYTE_COUNTS: Vec<u8> = Vec::with_capacity(39);
 pub static mut THIS_WEEKS_POLL_ID_BYTE_COUNTS: Vec<u8> = Vec::with_capacity(39);
+pub static mut NEXT_WEEKS_POLL_ID_BYTE_COUNTS: Vec<u8> = Vec::with_capacity(39);
 
 pub static mut DAY_B4_YESTERDAYS_POLL_ID_BYTE_COUNTS: Vec<u8> = Vec::with_capacity(39);
 pub static mut YESTERDAYS_POLL_ID_BYTE_COUNTS: Vec<u8> = Vec::with_capacity(39);
 pub static mut TODAYS_POLL_ID_BYTE_COUNTS: Vec<u8> = Vec::with_capacity(39);
+pub static mut TOMORROWS_POLL_ID_BYTE_COUNTS: Vec<u8> = Vec::with_capacity(39);
+pub static mut DAY_AFTER_TOMORROWS_POLL_ID_BYTE_COUNTS: Vec<u8> = Vec::with_capacity(39);
 
 /**
  * Ids of currently cached time periods, across all timezones
@@ -70,10 +74,10 @@ pub static mut DAY_AFTER_TOMORROWS_POLLS_BY_LOCATION: Vec<IntHashMap<LocationId,
  *      By:     categoryId
  *  Contain only the prepended Poll Ids
  */
-pub static mut NEXT_MONTHS_POLLS_BY_CATEGORY: LsbShiftTree<Vec<Vec<PollId>>> = LsbShiftTree::with_branch_factor(65536, 8);
-pub static mut NEXT_WEEKS_POLLS_BY_CATEGORY: LsbShiftTree<Vec<Vec<PollId>>> = LsbShiftTree::with_branch_factor(65536, 8);
-pub static mut TOMORROWS_POLLS_BY_CATEGORY: LsbShiftTree<Vec<Vec<PollId>>> = LsbShiftTree::with_branch_factor(65536, 8);
-pub static mut DAY_AFTER_TOMORROWS_POLLS_BY_CATEGORY: LsbShiftTree<Vec<Vec<PollId>>> = LsbShiftTree::with_branch_factor(65536, 8);
+pub static mut NEXT_MONTHS_POLLS_BY_CATEGORY: GlobalNode<Vec<Vec<PollId>>> = GlobalNode::new();
+pub static mut NEXT_WEEKS_POLLS_BY_CATEGORY: GlobalNode<Vec<Vec<PollId>>> = GlobalNode::new();
+pub static mut TOMORROWS_POLLS_BY_CATEGORY: GlobalNode<Vec<Vec<PollId>>> = GlobalNode::new();
+pub static mut DAY_AFTER_TOMORROWS_POLLS_BY_CATEGORY: GlobalNode<Vec<Vec<PollId>>> = GlobalNode::new();
 
 /**
  *  Random access Category and Location Id maps, needed by initial lookup from clients.  The

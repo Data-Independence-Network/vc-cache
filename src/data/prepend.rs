@@ -1,4 +1,3 @@
-
 /**
  *  We need a dynamically sized data structure for adding polls.  The data structure should be
  *  memory efficient but even more importantly should be computationally efficient.  HashMap
@@ -21,8 +20,10 @@
  *  A Hash Trie Map optimized for integer keys and
  *
  */
+type Callback = fn();
+
 pub struct GlobalNode<T> {
-    rootNode:Vec<Node<T>>,
+    rootNode: Vec<Node<T>>,
 }
 
 impl<T> GlobalNode<T> {
@@ -32,31 +33,95 @@ impl<T> GlobalNode<T> {
         }
     }
 
-    pub fn set(mut self, key: u64, value: T) {
-        let leafIndex = key & 0x00000fffu64;
-
-        match self.rootNode.get(leafIndex) {
-            None => {
-                self.rootNode[leafIndex] = value;
-            }
-            Some(node) => {
-                let subKey = key >> 24;
-                match node {
-                    Value(value) => {
-                        let childNode = Node::new();
-                        childNode.set(subKey, value);
-                        self.rootNode[leafIndex] = childNode;
-                    }
-                    ChildNodes(childNode) => {
-                        childNode.set(subKey, value);
+    pub fn upsert(mut self, key: usize, value: T) {
+        let mut leafIndex = key & 0x00000fffu64;
+        let mut subKey = key;
+        let newValue = Value::value(key, value);
+        let mut array = self.value;
+        let mut depth = 1;
+        loop {
+            match array.get(leafIndex) {
+                None => {
+                    array[leafIndex] = newValue;
+                    return;
+                }
+                Some(node) => {
+                    match node {
+                        Value(existingKey, value) => {
+                            existingSubKey = match depth {
+                                1 => {
+                                    existingKey >> 24
+                                }
+                                2 => {
+                                    existingKey >> 32
+                                }
+                                3 => {
+                                    existingKey >> 40
+                                }
+                                4 => {
+                                    existingKey >> 48
+                                }
+                                5 => {
+                                    existingKey >> 56
+                                }
+                            };
+                            existingLeafIndex = existingSubKey & 0x00000fffu64;
+                            loop {
+                                let mut data = Vec::with_capacity(8);
+                                newBranch = Value::ChildNode(data);
+                                array[leafIndex] = childNode;
+                                subKey >>= 8;
+                                leafIndex = subKey & 0x0000000fu64;
+                                if existingLeafIndex != leafIndex {
+                                    data[existingLeafIndex] = node;
+                                    data[leafIndex] = newValue;
+                                    return;
+                                }
+                                existingSubKey >>= 8;
+                                existingLeafIndex = existingSubKey & 0x0000000fu64;
+                                array = data;
+                            }
+                        }
+                        ChildNodes(childArray) => {
+                            if depth == 1 {
+                                subKey >>= 24;
+                            } else {
+                                subKey >>= 8;
+                            }
+                            leafIndex = subKey & 0x0000000fu64;
+                            array = childArray;
+                            depth += 1;
+                        }
                     }
                 }
             }
         }
     }
 
-    pub fn get(self, index: I) -> T {
+    pub fn get(self, key: u64) -> Option<V> {
+        let mut leafIndex = key & 0x0000000fu64;
+        let mut subKey = key;
+        let mut array = self.value;
 
+        loop {
+            match array.get(leafIndex) {
+                None => {
+                    return Option::None;
+                }
+                Some(node) => {
+                    match node {
+                        Value(_, value) => {
+                            return Option::Some(value);
+                        }
+                        ChildNodes(childArray) => {
+                            subKey >>= 8;
+                            leafIndex = subKey & 0x0000000fu64;
+                            array = childArray;
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -74,50 +139,90 @@ impl<T> NestedNode<T> {
     pub fn set(mut self, key: usize, value: T) {
         let mut leafIndex = key & 0x0000000fu64;
         let mut subKey = key;
-
+        let newValue = Value::value(key, value);
         let mut array = self.value;
+        let mut depth = 1;
         loop {
-        match array.get(leafIndex) {
-            None => {
-                array[leafIndex] = Value::Value(value);
-                return;
-            }
-            Some(node) => {
-                subKey = subKey >> 8;
-                match node {
-                    Value(existingKey, value) => {
-                        
-                        let data = Vec::with_capacity(8);
-                        newValue = Value::ChildNode(data);
-                        let childNode = Node::new();
-                        childNode.set(subKey, value);
-                        array[leafIndex] = childNode;
-                        return;
-                    }
-                    ChildNodes(childArray) => {
-                        leafIndex = subKey & 0x0000000fu64;
-                        array = childArray;
+            match array.get(leafIndex) {
+                None => {
+                    array[leafIndex] = newValue;
+                    return;
+                }
+                Some(node) => {
+                    match node {
+                        Value(existingKey, value) => {
+                            existingSubKey = match depth {
+                                1 => {
+                                    existingKey >> 8
+                                }
+                                2 => {
+                                    existingKey >> 16
+                                }
+                                3 => {
+                                    existingKey >> 24
+                                }
+                                4 => {
+                                    existingKey >> 32
+                                }
+                                5 => {
+                                    existingKey >> 40
+                                }
+                                6 => {
+                                    existingKey >> 48
+                                }
+                                7 => {
+                                    existingKey >> 56
+                                }
+                            };
+                            existingLeafIndex = existingSubKey & 0x0000000fu64;
+                            loop {
+                                let mut data = Vec::with_capacity(8);
+                                newBranch = Value::ChildNode(data);
+                                array[leafIndex] = childNode;
+                                subKey >>= 8;
+                                leafIndex = subKey & 0x0000000fu64;
+                                if existingLeafIndex != leafIndex {
+                                    data[existingLeafIndex] = node;
+                                    data[leafIndex] = newValue;
+                                    return;
+                                }
+                                existingSubKey >>= 8;
+                                existingLeafIndex = existingSubKey & 0x0000000fu64;
+                                array = data;
+                            }
+                        }
+                        ChildNodes(childArray) => {
+                            subKey = subKey >> 8;
+                            leafIndex = subKey & 0x0000000fu64;
+                            array = childArray;
+                            depth += 1;
+                        }
                     }
                 }
             }
         }
-        }
     }
 
     pub fn get(self, key: usize) -> Option<V> {
-        let leafIndex = key & 0x0000000fu64;
+        let mut leafIndex = key & 0x0000000fu64;
+        let mut subKey = key;
+        let mut array = self.value;
 
-        match self.value.get(leafIndex) {
-            None => {
-                return Option::None;
-            }
-            Some(node) => {
-                match node {
-                    Value(value) => {
-                        return Option::Some(value);
-                    }
-                    ChildNodes(childNode) => {
-                        return childNode.get(key >> 8);
+        loop {
+            match array.get(leafIndex) {
+                None => {
+                    return Option::None;
+                }
+                Some(node) => {
+                    match node {
+                        Value(_, value) => {
+                            return Option::Some(value);
+                        }
+                        ChildNodes(childArray) => {
+                            subKey = subKey >> 8;
+                            leafIndex = subKey & 0x0000000fu64;
+                            array = childArray;
+                        }
                     }
                 }
             }
@@ -127,5 +232,5 @@ impl<T> NestedNode<T> {
 
 enum Value<T> {
     Value(usize, T),
-    ChildNode(Vec<Value<T>>)
+    ChildNode(Vec<Value<T>>),
 }
