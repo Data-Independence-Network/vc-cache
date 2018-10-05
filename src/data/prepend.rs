@@ -234,3 +234,107 @@ enum Value<T> {
     Value(usize, T),
     ChildNode(Vec<Value<T>>),
 }
+
+
+struct BranchNode<T> {
+    pub high: Node<T>,
+    pub key: u64,
+    pub low: Node<T>,
+    pub val: T,
+}
+
+struct LeafNode<T> {
+    pub key: u64,
+    pub val: T
+}
+
+struct LowBranchNode<T> {
+    pub key: u64,
+    pub low: Node<T>,
+    pub val: T,
+}
+
+struct HighBranchNode<T> {
+    pub high: Node<T>,
+    pub key: u64,
+    pub val: T,
+}
+
+enum Node<T> {
+    Branch(BranchNode<T>),
+    High(HighBranchNode<T>),
+    Leaf(LeafNode<T>),
+    Low(LowBranchNode<T>),
+    Nil
+}
+
+
+struct LsbShiftTree<T> {
+    root: BranchNode<T>,
+}
+
+impl<T> LsbShiftTree<T> {
+    pub fn new(
+        val: T
+    ) -> LsbShiftTree<T> {
+        LsbShiftTree {
+            root: Node {
+                high: Node::Nil,
+                key: 0,
+                low: Node::Nil,
+                val,
+            }
+        }
+    }
+
+    pub fn add(
+        mut self,
+        key: u64,
+        val: T
+    ) {
+        let mut lastBit = key & 0x00000001u64;
+        let mut keyPrefix = key >> 1;
+        let mut nextNode: Node<T>;
+        let mut parentNode: Node<T> = self.root;
+
+        match lastBit {
+            0 => {
+                match self.root.low {
+                    Nil => {
+                        self.root.low = LeafNode { key, val };
+                        return;
+                    }
+                }
+                nextNode = self.root.low;
+            }
+            1 => {
+                match self.root.high {
+                    Nil => {
+                        self.root.high = LeafNode { key, val };
+                        return;
+                    }
+                }
+                nextNode = self.root.high;
+            }
+        }
+
+        loop {
+            lastBit = key & 0x00000001u64;
+            keyPrefix = key >> 1;
+            match nextNode {
+                Node::Branch(branchNode) => {
+
+                }
+                Node::High(highBranchNode) => {
+
+                }
+                Node::Leaf(leafNode) => {
+
+                }
+                Node::Low(lowBranchNode) => {
+
+                }
+            }
+        }
+    }
+}
