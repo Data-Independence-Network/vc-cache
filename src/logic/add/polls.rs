@@ -1,28 +1,59 @@
+use int_hash::IntHashMap;
+
+
+use super::super::super::cache::cache;
+use super::super::super::cache::cache::CategoryId;
+use super::super::super::cache::cache::DayId;
+use super::super::super::cache::cache::LocationId;
+use super::super::super::cache::cache::LocationPollPrependLists;
+use super::super::super::cache::cache::MonthId;
+use super::super::super::cache::cache::PollId;
+use super::super::super::cache::cache::TimezoneId;
+use super::super::super::cache::cache::WeekId;
+
+
+
+/**
+ *
+ *  Entering polls early - not needed for Minimum Viable Product.
+ *
+ *  Batching poll entries to reduce rehashing:
+ *
+ *    what are the chances of polls coming in for multiple
+ *    categories at the same time - very high
+ *
+ *    what are the chances of polls coming in for the same
+ *    category in the same location at the same time
+ *          - not as high
+ */
 pub fn add_polls(
-    dataStream: &[u8]
+    rawData: &[u8]
 ) {
 
 }
 
 fn add_day_poll(
-    vcDayId: u32,
-    globalPollId: u64,
+    vcDayId: DayId,
+    globalPollId: PollId,
+    globalLocationId: LocationId,
     globalCategoryIds: Vec<u64>,
 ) {
-
+    
 }
 
 fn add_week_poll(
-    vcWeekId: u32,
-    globalPollId: u64,
+    vcWeekId: WeekId,
+    globalPollId: PollId,
+    globalLocationId: LocationId,
     globalCategoryIds: Vec<u64>,
 ) {
 
 }
 
 fn add_month_poll(
-    vcMonthId: u32,
-    globalPollId: u64,
+    vcMonthId: MonthId,
+    globalPollId: PollId,
+    globalLocationId: LocationId,
     globalCategoryIds: Vec<u64>,
 ) {
 
