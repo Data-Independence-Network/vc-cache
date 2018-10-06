@@ -1,6 +1,4 @@
-use super::super::data::prepend::GlobalNode;
 use int_hash::IntHashMap;
-
 
 pub type CategoryCacheIndex = u32;
 pub type CategoryId = u64;

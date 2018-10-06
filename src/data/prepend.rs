@@ -28,7 +28,7 @@ pub struct GlobalNode<T> {
 
 impl<T> GlobalNode<T> {
     pub fn new() -> GlobalNode<T> {
-        LsbShiftTree {
+        GlobalNode {
             rootNode: Vec::with_capacity(16777216),
         }
     }

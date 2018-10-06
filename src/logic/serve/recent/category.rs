@@ -10,6 +10,14 @@ use super::super::super::super::cache::cache::WeekId;
 use super::super::super::super::data::prepend::GlobalNode;
 use super::super::super::super::server::codes;
 
+use super::utils::get2ByteRecentPollIds;
+use super::utils::get3ByteRecentPollIds;
+use super::utils::get4ByteRecentPollIds;
+use super::utils::get5ByteRecentPollIds;
+use super::utils::get6ByteRecentPollIds;
+use super::utils::get7ByteRecentPollIds;
+use super::utils::get8ByteRecentPollIds;
+
 const noResults: Vec<u8> = Vec::new();
 
 pub fn get_tomorrows_category_polls(
@@ -130,123 +138,4 @@ fn get_global_category_polls(
             return get8ByteRecentPollIds(pollsBlock, response);
         }
     }
-}
-
-#[inline]
-fn get2ByteRecentPollIds(
-    pollIds: Vec<PollId>,
-    mut response: Vec<u8>,
-) -> Vec<u8> {
-    for pollId in pollIds {
-        let pollIdBytes: [u8; 8] = unsafe {
-            // Poll Id in the period of a given time zone
-            std::mem::transmute(*voteCount.tzAndPeriodPollId);
-        };
-        // TODO: ALWAYS verify Big fs Little Endianness
-        response.extend_from_slice(&pollIdBytes[6..7]);
-    }
-
-    return response;
-}
-
-#[inline]
-fn get3ByteRecentPollIds(
-    pollIds: Vec<PollId>,
-    mut response: Vec<u8>,
-) -> Vec<u8> {
-    for pollId in pollIds {
-        let pollIdBytes: [u8; 8] = unsafe {
-            // Poll Id in the period of a given time zone
-            std::mem::transmute(*voteCount.tzAndPeriodPollId);
-        };
-        // TODO: ALWAYS verify Big fs Little Endianness
-        response.extend_from_slice(&pollIdBytes[5..7]);
-    }
-
-    return response;
-}
-
-#[inline]
-fn get4ByteRecentPollIds(
-    pollIds: Vec<PollId>,
-    mut response: Vec<u8>,
-) -> Vec<u8> {
-    for pollId in pollIds {
-        let pollIdBytes: [u8; 8] = unsafe {
-            // Poll Id in the period of a given time zone
-            std::mem::transmute(*voteCount.tzAndPeriodPollId);
-        };
-        // TODO: ALWAYS verify Big fs Little Endianness
-        response.extend_from_slice(&pollIdBytes[4..7]);
-    }
-
-    return response;
-}
-
-#[inline]
-fn get5ByteRecentPollIds(
-    pollIds: Vec<PollId>,
-    mut response: Vec<u8>,
-) -> Vec<u8> {
-    for pollId in pollIds {
-        let pollIdBytes: [u8; 8] = unsafe {
-            // Poll Id in the period of a given time zone
-            std::mem::transmute(*voteCount.tzAndPeriodPollId);
-        };
-        // TODO: ALWAYS verify Big fs Little Endianness
-        response.extend_from_slice(&pollIdBytes[3..7]);
-    }
-
-    return response;
-}
-
-#[inline]
-fn get6ByteRecentPollIds(
-    pollIds: Vec<PollId>,
-    mut response: Vec<u8>,
-) -> Vec<u8> {
-    for pollId in pollIds {
-        let pollIdBytes: [u8; 8] = unsafe {
-            // Poll Id in the period of a given time zone
-            std::mem::transmute(*voteCount.tzAndPeriodPollId);
-        };
-        // TODO: ALWAYS verify Big fs Little Endianness
-        response.extend_from_slice(&pollIdBytes[2..7]);
-    }
-
-    return response;
-}
-
-#[inline]
-fn get7ByteRecentPollIds(
-    pollIds: Vec<PollId>,
-    mut response: Vec<u8>,
-) -> Vec<u8> {
-    for pollId in pollIds {
-        let pollIdBytes: [u8; 8] = unsafe {
-            // Poll Id in the period of a given time zone
-            std::mem::transmute(*voteCount.tzAndPeriodPollId);
-        };
-        // TODO: ALWAYS verify Big fs Little Endianness
-        response.extend_from_slice(&pollIdBytes[1..7]);
-    }
-
-    return response;
-}
-
-#[inline]
-fn get8ByteRecentPollIds(
-    pollIds: Vec<PollId>,
-    mut response: Vec<u8>,
-) -> Vec<u8> {
-    for pollId in pollIds {
-        let pollIdBytes: [u8; 8] = unsafe {
-            // Poll Id in the period of a given time zone
-            std::mem::transmute(*voteCount.tzAndPeriodPollId);
-        };
-        // TODO: ALWAYS verify Big fs Little Endianness
-        response.extend_from_slice(&pollIdBytes);
-    }
-
-    return response;
 }

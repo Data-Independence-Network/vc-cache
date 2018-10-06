@@ -653,52 +653,108 @@ impl<T: Context + Send> App<T> {
 
             // Recent Polls by Location
 
-            codes::URL_NEXT_MONTHS_LOCATION_POLLS => {}
-            codes::URL_NEXT_WEEKS_LOCATION_POLLS => {}
-            codes::URL_TOMORROWS_LOCATION_POLLS => {}
-            codes::URL_DAY_AFTER_TOMORROWS_LOCATION_POLLS => {}
+            codes::URL_NEXT_MONTHS_LOCATION_POLLS => {
+                if wrongRequestLength20(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (monthId, timezoneId, blockNumber, globalLocationId) = readThreeIntsAndLong(request_body);
+                    get_next_months_location_polls(monthId, timezoneId, blockNumber, globalLocationId);
+                }
+            }
+            codes::URL_NEXT_WEEKS_LOCATION_POLLS => {
+                if wrongRequestLength20(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (weekId, timezoneId, blockNumber, globalLocationId) = readThreeIntsAndLong(request_body);
+                    get_next_weeks_location_polls(weekId, timezoneId, blockNumber, globalLocationId);
+                }
+            }
+            codes::URL_TOMORROWS_LOCATION_POLLS => {
+                if wrongRequestLength20(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (dayId, timezoneId, blockNumber, globalLocationId) = readThreeIntsAndLong(request_body);
+                    get_tomorrows_location_polls(dayId, timezoneId, blockNumber, globalLocationId);
+                }
+            }
+            codes::URL_DAY_AFTER_TOMORROWS_LOCATION_POLLS => {
+                if wrongRequestLength20(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (dayId, timezoneId, blockNumber, globalLocationId) = readThreeIntsAndLong(request_body);
+                    get_day_after_tomorrows_location_polls(dayId, timezoneId, blockNumber, globalLocationId);
+                }
+            }
 
             // Recent Polls by Category
 
             codes::URL_NEXT_MONTHS_CATEGORY_POLLS => {
-                if wrongRequestLength12(request_body) {
+                if wrongRequestLength16(request_body) {
                     codes::INVALID_DATA_FORMAT_RESPONSE
                 } else {
-                    let (blockNumber, globalCategoryId) = readIntAndLong(request_body);
-                    get_next_months_category_polls(blockNumber, globalCategoryId);
+                    let (monthId,blockNumber, globalCategoryId) = readTwoIntsAndLong(request_body);
+                    get_next_months_category_polls(monthId, blockNumber, globalCategoryId);
                 }
             }
             codes::URL_NEXT_WEEKS_CATEGORY_POLLS => {
-                if wrongRequestLength12(request_body) {
+                if wrongRequestLength16(request_body) {
                     codes::INVALID_DATA_FORMAT_RESPONSE
                 } else {
-                    let (blockNumber, globalCategoryId) = readIntAndLong(request_body);
-                    get_next_weeks_category_polls(blockNumber, globalCategoryId);
+                    let (weekId,blockNumber, globalCategoryId) = readTwoIntsAndLong(request_body);
+                    get_next_weeks_category_polls(weekId, blockNumber, globalCategoryId);
                 }
             }
             codes::URL_TOMORROWS_CATEGORY_POLLS => {
-                if wrongRequestLength12(request_body) {
+                if wrongRequestLength16(request_body) {
                     codes::INVALID_DATA_FORMAT_RESPONSE
                 } else {
-                    let (blockNumber, globalCategoryId) = readIntAndLong(request_body);
-                    get_tomorrows_category_polls(blockNumber, globalCategoryId);
+                    let (dayId,blockNumber, globalCategoryId) = readTwoIntsAndLong(request_body);
+                    get_tomorrows_category_polls(dayId, blockNumber, globalCategoryId);
                 }
             }
             codes::URL_DAY_AFTER_TOMORROWS_CATEGORY_POLLS => {
-                if wrongRequestLength12(request_body) {
+                if wrongRequestLength16(request_body) {
                     codes::INVALID_DATA_FORMAT_RESPONSE
                 } else {
-                    let (blockNumber, globalCategoryId) = readIntAndLong(request_body);
-                    get_day_after_tomorrows_category_polls(blockNumber, globalCategoryId);
+                    let (dayId,blockNumber, globalCategoryId) = readTwoIntsAndLong(request_body);
+                    get_day_after_tomorrows_category_polls(dayId, blockNumber, globalCategoryId);
                 }
             }
 
             // Recent Polls by Location Category
 
-            codes::URL_NEXT_MONTHS_LOCATION_CATEGORY_POLLS => {}
-            codes::URL_NEXT_WEEKS_LOCATION_CATEGORY_POLLS => {}
-            codes::URL_TOMORROWS_LOCATION_CATEGORY_POLLS => {}
-            codes::URL_DAY_AFTER_TOMORROWS_LOCATION_CATEGORY_POLLS => {}
+            codes::URL_NEXT_MONTHS_LOCATION_CATEGORY_POLLS => {
+                if wrongRequestLength28(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (monthId, timezoneId, blockNumber, globalLocationId, globalCategoryId) = readThreeIntsAndTwoLongs(request_body);
+                    get_next_months_location_category_polls(monthId, timezoneId, blockNumber, globalLocationId, globalCategoryId);
+                }
+            }
+            codes::URL_NEXT_WEEKS_LOCATION_CATEGORY_POLLS => {
+                if wrongRequestLength28(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (weekId, timezoneId, blockNumber, globalLocationId, globalCategoryId) = readThreeIntsAndTwoLongs(request_body);
+                    get_next_weeks_location_category_polls(weekId, timezoneId, blockNumber, globalLocationId, globalCategoryId);
+                }
+            }
+            codes::URL_TOMORROWS_LOCATION_CATEGORY_POLLS => {
+                if wrongRequestLength28(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (dayId, timezoneId, blockNumber, globalLocationId, globalCategoryId) = readThreeIntsAndTwoLongs(request_body);
+                    get_tomorrows_location_category_polls(dayId, timezoneId, blockNumber, globalLocationId, globalCategoryId);
+                }
+            }
+            codes::URL_DAY_AFTER_TOMORROWS_LOCATION_CATEGORY_POLLS => {
+                if wrongRequestLength28(request_body) {
+                    codes::INVALID_DATA_FORMAT_RESPONSE
+                } else {
+                    let (dayId, timezoneId, blockNumber, globalLocationId, globalCategoryId) = readThreeIntsAndTwoLongs(request_body);
+                    get_day_after_tomorrows_location_category_polls(dayId, timezoneId, blockNumber, globalLocationId, globalCategoryId);
+                }
+            }
 
             _ => {
                 codes::INVALID_DATA_FORMAT_RESPONSE
@@ -746,15 +802,6 @@ fn wrongRequestLength24(requestBody: &[u8]) -> boolean {
 #[inline]
 fn wrongRequestLength28(requestBody: &[u8]) -> boolean {
     requestBody.len() != 28
-}
-
-#[inline]
-fn readIntAndLong(requestBody: &[u8]) -> (u32, u64) {
-    let mut requestDataReader = Cursor::new(requestBody);
-    return (
-        requestDataReader.read_u32::<BigEndian>().unwrap(),
-        requestDataReader.read_u64::<BigEndian>().unwrap()
-    );
 }
 
 #[inline]

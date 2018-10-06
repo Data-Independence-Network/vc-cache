@@ -1,7 +1,6 @@
 use std::mem::transmute;
 use int_hash::IntHashMap;
 
-use super::super::super::super::server::codes;
 use super::super::super::super::cache::cache;
 use super::super::super::super::cache::cache::DayId;
 use super::super::super::super::cache::cache::LocationCacheIndex;
@@ -12,6 +11,7 @@ use super::super::super::super::cache::cache::TimezoneId;
 use super::super::super::super::cache::cache::VoteCount;
 use super::super::super::super::cache::cache::WeekId;
 use super::super::super::super::data::byte_counts::ByteCounts;
+use super::super::super::super::server::codes;
 
 use super::location_and_loc_category::INITIAL_RESPONSE_VECTOR_SIZE_2_POLL_BYTES;
 use super::location_and_loc_category::INITIAL_RESPONSE_VECTOR_SIZE_3_POLL_BYTES;
