@@ -1,62 +1,88 @@
+use int_hash::IntHashMap;
+
 use super::super::super::super::cache::cache;
+use super::super::super::super::cache::cache::CategoryId;
+use super::super::super::super::cache::cache::DayId;
+use super::super::super::super::cache::cache::GLOBAL_CATEGORY_TZ_INDEX;
+use super::super::super::super::cache::cache::MonthId;
 use super::super::super::super::cache::cache::PollId;
+use super::super::super::super::cache::cache::WeekId;
 use super::super::super::super::data::prepend::GlobalNode;
+use super::super::super::super::server::codes;
 
 const noResults: Vec<u8> = Vec::new();
 
 pub fn get_tomorrows_category_polls(
+    vcDayId: DayId,
     // 1 based index
     blockNumber: u32,
-    globalCategoryId: u64,
+    globalCategoryId: CategoryId,
 ) -> Vec<u8> {
     return get_global_category_polls(
+        cache::CATEGORY_CACHE_PERIOD_IDS.tomorrowsVcDayId,
+        vcDayId,
         cache::TOMORROWS_POLLS_BY_CATEGORY,
         blockNumber, globalCategoryId,
-        cache::TOMORROWS_POLL_ID_BYTE_COUNTS[38]);
+        cache::TOMORROWS_POLL_ID_BYTE_COUNTS[GLOBAL_CATEGORY_TZ_INDEX]);
 }
 
 pub fn get_day_after_tomorrows_category_polls(
+    vcDayId: DayId,
     // 1 based index
     blockNumber: u32,
-    globalCategoryId: u64,
+    globalCategoryId: CategoryId,
 ) -> Vec<u8> {
     return get_global_category_polls(
+        cache::CATEGORY_CACHE_PERIOD_IDS.dayAfterTomorrowsVcDayId,
+        vcDayId,
         cache::DAY_AFTER_TOMORROWS_POLLS_BY_CATEGORY,
         blockNumber, globalCategoryId,
-        cache::DAY_AFTER_TOMORROWS_POLL_ID_BYTE_COUNTS[38]);
+        cache::DAY_AFTER_TOMORROWS_POLL_ID_BYTE_COUNTS[GLOBAL_CATEGORY_TZ_INDEX]);
 }
 
 pub fn get_next_weeks_category_polls(
+    vcWeekId: WeekId,
     // 1 based index
     blockNumber: u32,
-    globalCategoryId: u64,
+    globalCategoryId: CategoryId,
 ) -> Vec<u8> {
     return get_global_category_polls(
+        cache::CATEGORY_CACHE_PERIOD_IDS.nextWeeksVcWeekId,
+        vcWeekId,
         cache::NEXT_WEEKS_POLLS_BY_CATEGORY,
         blockNumber, globalCategoryId,
-        cache::NEXT_WEEKS_POLL_ID_BYTE_COUNTS[38]);
+        cache::NEXT_WEEKS_POLL_ID_BYTE_COUNTS[GLOBAL_CATEGORY_TZ_INDEX]);
 }
 
 pub fn get_next_months_category_polls(
+    vcMonthId: MonthId,
     // 1 based index
     blockNumber: u32,
-    globalCategoryId: u64,
+    globalCategoryId: CategoryId,
 ) -> Vec<u8> {
     return get_global_category_polls(
+        cache::CATEGORY_CACHE_PERIOD_IDS.nextMonthsVcMonthId,
+        vcMonthId,
         cache::NEXT_MONTHS_POLLS_BY_CATEGORY,
         blockNumber, globalCategoryId,
-        cache::NEXT_MONTHS_POLL_ID_BYTE_COUNTS[38]);
+        cache::NEXT_MONTHS_POLL_ID_BYTE_COUNTS[GLOBAL_CATEGORY_TZ_INDEX]);
 }
 
 
 fn get_global_category_polls(
-    globalCategoryPolls: GlobalNode<Vec<Vec<PollId>>>,
+    currentPeriodId: u32,
+    expectedPeriodId: u32,
+    globalCategoryPolls: IntHashMap<CategoryId, Vec<Vec<PollId>>>,
     // 1 based index
     blockNumber: u32,
-    globalCategoryId: u64,
+    globalCategoryId: CategoryId,
     maxPollNumberBytes: u8,
 ) -> Vec<u8> {
-    let categoryPolls: Vec<Vec<PollId>> = match globalCategoryPolls.get(globalCategoryId) {
+    if currentPeriodId != expectedPeriodId {
+        return codes::INVALID_PERIOD_ID_RESPONSE;
+    }
+
+    let categoryPolls: Vec<Vec<PollId>> = match globalCategoryPolls.get(*globalCategoryId) {
         None => {
             return noResults;
         }

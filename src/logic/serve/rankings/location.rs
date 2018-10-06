@@ -3,8 +3,14 @@ use int_hash::IntHashMap;
 
 use super::super::super::super::server::codes;
 use super::super::super::super::cache::cache;
-use super::super::super::super::cache::cache::VoteCount;
+use super::super::super::super::cache::cache::DayId;
+use super::super::super::super::cache::cache::LocationCacheIndex;
+use super::super::super::super::cache::cache::LocationId;
 use super::super::super::super::cache::cache::LocationPollRankings;
+use super::super::super::super::cache::cache::MonthId;
+use super::super::super::super::cache::cache::TimezoneId;
+use super::super::super::super::cache::cache::VoteCount;
+use super::super::super::super::cache::cache::WeekId;
 use super::super::super::super::data::byte_counts::ByteCounts;
 
 use super::location_and_loc_category::INITIAL_RESPONSE_VECTOR_SIZE_2_POLL_BYTES;
@@ -24,10 +30,10 @@ use super::location_and_loc_category::get7ByteRecentPolls;
 use super::location_and_loc_category::get8ByteRecentPolls;
 
 pub fn get_todays_location_rankings_by_global_id(
-    vcDayId: u32,
-    timezoneId: u32,
+    vcDayId: DayId,
+    timezoneId: TimezoneId,
     blockIndex: u32,
-    globalLocationId: u64,
+    globalLocationId: LocationId,
 ) -> Vec<u8> {
     let currentPeriodIds: cache::CachePeriodIds =
         match cache::PER_TIMEZONE__CACHE_PERIOD_IDS(timezoneId) {
@@ -52,10 +58,10 @@ pub fn get_todays_location_rankings_by_global_id(
 }
 
 pub fn get_todays_location_rankings_by_cache_index(
-    vcDayId: u32,
-    timezoneId: u32,
+    vcDayId: DayId,
+    timezoneId: TimezoneId,
     blockIndex: u32,
-    locationCacheIndex: u32,
+    locationCacheIndex: LocationCacheIndex,
 ) -> Vec<u8> {
     let currentPeriodIds: cache::CachePeriodIds =
         match cache::PER_TIMEZONE__CACHE_PERIOD_IDS(timezoneId) {
@@ -79,10 +85,10 @@ pub fn get_todays_location_rankings_by_cache_index(
 }
 
 pub fn get_yesterdays_location_rankings_by_global_id(
-    vcDayId: u32,
-    timezoneId: u32,
+    vcDayId: DayId,
+    timezoneId: TimezoneId,
     blockIndex: u32,
-    globalLocationId: u64,
+    globalLocationId: LocationId,
 ) -> Vec<u8> {
     let currentPeriodIds: cache::CachePeriodIds =
         match cache::PER_TIMEZONE__CACHE_PERIOD_IDS(timezoneId) {
@@ -107,10 +113,10 @@ pub fn get_yesterdays_location_rankings_by_global_id(
 }
 
 pub fn get_yesterdays_location_rankings_by_cache_index(
-    vcDayId: u32,
-    timezoneId: u32,
+    vcDayId: DayId,
+    timezoneId: TimezoneId,
     blockIndex: u32,
-    locationCacheIndex: u32,
+    locationCacheIndex: LocationCacheIndex,
 ) -> Vec<u8> {
     let currentPeriodIds: cache::CachePeriodIds =
         match cache::PER_TIMEZONE__CACHE_PERIOD_IDS(timezoneId) {
@@ -134,10 +140,10 @@ pub fn get_yesterdays_location_rankings_by_cache_index(
 }
 
 pub fn get_day_b4_yesterdays_location_rankings_by_global_id(
-    vcDayId: u32,
-    timezoneId: u32,
+    vcDayId: DayId,
+    timezoneId: TimezoneId,
     blockIndex: u32,
-    globalLocationId: u64,
+    globalLocationId: LocationId,
 ) -> Vec<u8> {
     let currentPeriodIds: cache::CachePeriodIds =
         match cache::PER_TIMEZONE__CACHE_PERIOD_IDS(timezoneId) {
@@ -162,10 +168,10 @@ pub fn get_day_b4_yesterdays_location_rankings_by_global_id(
 }
 
 pub fn get_day_b4_yesterdays_location_rankings_by_cache_index(
-    vcDayId: u32,
-    timezoneId: u32,
+    vcDayId: DayId,
+    timezoneId: TimezoneId,
     blockIndex: u32,
-    locationCacheIndex: u32,
+    locationCacheIndex: LocationCacheIndex,
 ) -> Vec<u8> {
     let currentPeriodIds: cache::CachePeriodIds =
         match cache::PER_TIMEZONE__CACHE_PERIOD_IDS(timezoneId) {
@@ -189,10 +195,10 @@ pub fn get_day_b4_yesterdays_location_rankings_by_cache_index(
 }
 
 pub fn get_this_weeks_location_rankings_by_global_id(
-    vcWeekId: u32,
-    timezoneId: u32,
+    vcWeekId: WeekId,
+    timezoneId: TimezoneId,
     blockIndex: u32,
-    globalLocationId: u64,
+    globalLocationId: LocationId,
 ) -> Vec<u8> {
     let currentPeriodIds: cache::CachePeriodIds =
         match cache::PER_TIMEZONE__CACHE_PERIOD_IDS(timezoneId) {
@@ -217,10 +223,10 @@ pub fn get_this_weeks_location_rankings_by_global_id(
 }
 
 pub fn get_this_weeks_location_rankings_by_cache_index(
-    vcWeekId: u32,
-    timezoneId: u32,
+    vcWeekId: WeekId,
+    timezoneId: TimezoneId,
     blockIndex: u32,
-    locationCacheIndex: u32,
+    locationCacheIndex: LocationCacheIndex,
 ) -> Vec<u8> {
     let currentPeriodIds: cache::CachePeriodIds =
         match cache::PER_TIMEZONE__CACHE_PERIOD_IDS(timezoneId) {
@@ -244,10 +250,10 @@ pub fn get_this_weeks_location_rankings_by_cache_index(
 }
 
 pub fn get_last_weeks_location_rankings_by_global_id(
-    vcWeekId: u32,
-    timezoneId: u32,
+    vcWeekId: WeekId,
+    timezoneId: TimezoneId,
     blockIndex: u32,
-    globalLocationId: u64,
+    globalLocationId: LocationId,
 ) -> Vec<u8> {
     let currentPeriodIds: cache::CachePeriodIds =
         match cache::PER_TIMEZONE__CACHE_PERIOD_IDS(timezoneId) {
@@ -272,10 +278,10 @@ pub fn get_last_weeks_location_rankings_by_global_id(
 }
 
 pub fn get_last_weeks_location_rankings_by_cache_index(
-    vcWeekId: u32,
-    timezoneId: u32,
+    vcWeekId: WeekId,
+    timezoneId: TimezoneId,
     blockIndex: u32,
-    locationCacheIndex: u32,
+    locationCacheIndex: LocationCacheIndex,
 ) -> Vec<u8> {
     let currentPeriodIds: cache::CachePeriodIds =
         match cache::PER_TIMEZONE__CACHE_PERIOD_IDS(timezoneId) {
@@ -299,10 +305,10 @@ pub fn get_last_weeks_location_rankings_by_cache_index(
 }
 
 pub fn get_this_months_location_rankings_by_global_id(
-    vcMonthId: u32,
-    timezoneId: u32,
+    vcMonthId: MonthId,
+    timezoneId: TimezoneId,
     blockIndex: u32,
-    globalLocationId: u64,
+    globalLocationId: LocationId,
 ) -> Vec<u8> {
     let currentPeriodIds: cache::CachePeriodIds =
         match cache::PER_TIMEZONE__CACHE_PERIOD_IDS(timezoneId) {
@@ -327,10 +333,10 @@ pub fn get_this_months_location_rankings_by_global_id(
 }
 
 pub fn get_this_months_location_rankings_by_cache_index(
-    vcMonthId: u32,
-    timezoneId: u32,
+    vcMonthId: MonthId,
+    timezoneId: TimezoneId,
     blockIndex: u32,
-    locationCacheIndex: u32,
+    locationCacheIndex: LocationCacheIndex,
 ) -> Vec<u8> {
     let currentPeriodIds: cache::CachePeriodIds =
         match cache::PER_TIMEZONE__CACHE_PERIOD_IDS(timezoneId) {
@@ -354,10 +360,10 @@ pub fn get_this_months_location_rankings_by_cache_index(
 }
 
 pub fn get_last_months_location_rankings_by_global_id(
-    vcMonthId: u32,
-    timezoneId: u32,
+    vcMonthId: MonthId,
+    timezoneId: TimezoneId,
     blockIndex: u32,
-    globalLocationId: u64,
+    globalLocationId: LocationId,
 ) -> Vec<u8> {
     let currentPeriodIds: cache::CachePeriodIds =
         match cache::PER_TIMEZONE__CACHE_PERIOD_IDS(timezoneId) {
@@ -382,10 +388,10 @@ pub fn get_last_months_location_rankings_by_global_id(
 }
 
 pub fn get_last_months_location_rankings_by_cache_index(
-    vcMonthId: u32,
-    timezoneId: u32,
+    vcMonthId: MonthId,
+    timezoneId: TimezoneId,
     blockIndex: u32,
-    locationCacheIndex: u32,
+    locationCacheIndex: LocationCacheIndex,
 ) -> Vec<u8> {
     let currentPeriodIds: cache::CachePeriodIds =
         match cache::PER_TIMEZONE__CACHE_PERIOD_IDS(timezoneId) {
@@ -411,10 +417,10 @@ pub fn get_last_months_location_rankings_by_cache_index(
 fn get_location_rankings_by_global_id(
     currentPeriodId: u32,
     expectedPeriodId: u32,
-    timezoneId: u32,
-    locationIndexMap: IntHashMap<u64, cache::LocationPeriodIds>,
+    timezoneId: TimezoneId,
+    locationIndexMap: IntHashMap<LocationId, cache::LocationPeriodIds>,
     givenPeriodLocationPollRankings: Vec<Vec<LocationPollRankings>>,
-    globalLocationId: u64,
+    globalLocationId: LocationId,
     blockIndex: u32,
     maxPollNumberBytes: u8,
 ) -> Vec<u8> {
@@ -443,9 +449,9 @@ fn get_location_rankings_by_global_id(
 fn get_location_rankings_by_cache_index(
     currentPeriodId: u32,
     expectedPeriodId: u32,
-    timezoneId: u32,
+    timezoneId: TimezoneId,
     givenPeriodLocationPollRankings: Vec<Vec<LocationPollRankings>>,
-    locationCacheIndex: u32,
+    locationCacheIndex: LocationCacheIndex,
     blockIndex: u32,
     maxPollNumberBytes: u8,
 ) -> Vec<u8> {
@@ -472,9 +478,9 @@ fn get_location_rankings_by_cache_index(
 
 #[inline]
 fn get_location_rankings_with_location_cache_index(
-    timezoneId: u32,
+    timezoneId: TimezoneId,
     firstRecordIndex: usize,
-    locationCacheIndex: u32,
+    locationCacheIndex: LocationCacheIndex,
     locationPollRankings: LocationPollRankings,
     maxPollNumberBytes: u8,
 ) -> Vec<u8> {
@@ -489,49 +495,49 @@ fn get_location_rankings_with_location_cache_index(
             response.push(0b00000010);
             response.extend_from_slice(&locationCacheIndexBytes);
 
-            return get2ByteRecentPolls(*voteCountsForLocation, firstRecordIndex, response);
+            return get2ByteRecentPolls(voteCountsForLocation, firstRecordIndex, response);
         }
         3 => {
             let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_3_POLL_BYTES);
             response.push(0b00000011);
             response.extend_from_slice(&locationCacheIndexBytes);
 
-            return get3ByteRecentPolls(*voteCountsForLocation, firstRecordIndex, response);
+            return get3ByteRecentPolls(voteCountsForLocation, firstRecordIndex, response);
         }
         4 => {
             let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_4_POLL_BYTES);
             response.push(0b00000100);
             response.extend_from_slice(&locationCacheIndexBytes);
 
-            return get4ByteRecentPolls(*voteCountsForLocation, firstRecordIndex, response);
+            return get4ByteRecentPolls(voteCountsForLocation, firstRecordIndex, response);
         }
         5 => {
             let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_5_POLL_BYTES);
             response.push(0b00000101);
             response.extend_from_slice(&locationCacheIndexBytes);
 
-            return get4ByteRecentPolls(*voteCountsForLocation, firstRecordIndex, response);
+            return get4ByteRecentPolls(voteCountsForLocation, firstRecordIndex, response);
         }
         6 => {
             let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_6_POLL_BYTES);
             response.push(0b00000110);
             response.extend_from_slice(&locationCacheIndexBytes);
 
-            return get4ByteRecentPolls(*voteCountsForLocation, firstRecordIndex, response);
+            return get4ByteRecentPolls(voteCountsForLocation, firstRecordIndex, response);
         }
         7 => {
             let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_7_POLL_BYTES);
             response.push(0b00000111);
             response.extend_from_slice(&locationCacheIndexBytes);
 
-            return get4ByteRecentPolls(*voteCountsForLocation, firstRecordIndex, response);
+            return get4ByteRecentPolls(voteCountsForLocation, firstRecordIndex, response);
         }
         8 => {
             let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_8_POLL_BYTES);
             response.push(0b00000000);
             response.extend_from_slice(&locationCacheIndexBytes);
 
-            return get4ByteRecentPolls(*voteCountsForLocation, firstRecordIndex, response);
+            return get4ByteRecentPolls(voteCountsForLocation, firstRecordIndex, response);
         }
     }
 //            return codes::INVALID_CATEGORY_RESPONSE;
@@ -539,9 +545,9 @@ fn get_location_rankings_with_location_cache_index(
 
 #[inline]
 fn get_location_rankings(
-    timezoneId: u32,
+    timezoneId: TimezoneId,
     firstRecordIndex: usize,
-    locationCacheIndex: u32,
+    locationCacheIndex: LocationCacheIndex,
     locationPollRankings: LocationPollRankings,
     maxPollNumberBytes: u8,
 ) -> Vec<u8> {
@@ -552,43 +558,43 @@ fn get_location_rankings(
             let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_2_POLL_BYTES);
             response.push(0b00000010);
 
-            return get2ByteRecentPolls(*voteCountsForLocation, firstRecordIndex, response);
+            return get2ByteRecentPolls(voteCountsForLocation, firstRecordIndex, response);
         }
         3 => {
             let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_3_POLL_BYTES);
             response.push(0b00000011);
 
-            return get3ByteRecentPolls(*voteCountsForLocation, firstRecordIndex, response);
+            return get3ByteRecentPolls(voteCountsForLocation, firstRecordIndex, response);
         }
         4 => {
             let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_4_POLL_BYTES);
             response.push(0b00000100);
 
-            return get4ByteRecentPolls(*voteCountsForLocation, firstRecordIndex, response);
+            return get4ByteRecentPolls(voteCountsForLocation, firstRecordIndex, response);
         }
         5 => {
             let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_5_POLL_BYTES);
             response.push(0b00000101);
 
-            return get4ByteRecentPolls(*voteCountsForLocation, firstRecordIndex, response);
+            return get4ByteRecentPolls(voteCountsForLocation, firstRecordIndex, response);
         }
         6 => {
             let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_6_POLL_BYTES);
             response.push(0b00000110);
 
-            return get4ByteRecentPolls(*voteCountsForLocation, firstRecordIndex, response);
+            return get4ByteRecentPolls(voteCountsForLocation, firstRecordIndex, response);
         }
         7 => {
             let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_7_POLL_BYTES);
             response.push(0b00000111);
 
-            return get4ByteRecentPolls(*voteCountsForLocation, firstRecordIndex, response);
+            return get4ByteRecentPolls(voteCountsForLocation, firstRecordIndex, response);
         }
         8 => {
             let mut response: Vec<u8> = Vec::with_capacity(INITIAL_RESPONSE_VECTOR_SIZE_8_POLL_BYTES);
             response.push(0b00000000);
 
-            return get4ByteRecentPolls(*voteCountsForLocation, firstRecordIndex, response);
+            return get4ByteRecentPolls(voteCountsForLocation, firstRecordIndex, response);
         }
     }
 //            return codes::INVALID_CATEGORY_RESPONSE;

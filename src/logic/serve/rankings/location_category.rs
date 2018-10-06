@@ -3,7 +3,18 @@ use int_hash::IntHashMap;
 
 use super::super::super::super::server::codes;
 use super::super::super::super::cache::cache;
+use super::super::super::super::cache::cache::CategoryCacheIndex;
+use super::super::super::super::cache::cache::CategoryId;
+use super::super::super::super::cache::cache::CategoryPollRankings;
+use super::super::super::super::cache::cache::DayId;
+use super::super::super::super::cache::cache::LocationCacheIndex;
+use super::super::super::super::cache::cache::LocationCategoryCacheIndex;
+use super::super::super::super::cache::cache::LocationId;
+use super::super::super::super::cache::cache::LocationPollRankings;
+use super::super::super::super::cache::cache::MonthId;
+use super::super::super::super::cache::cache::TimezoneId;
 use super::super::super::super::cache::cache::VoteCount;
+use super::super::super::super::cache::cache::WeekId;
 use super::super::super::super::cache::cache::LocationPollRankings;
 use super::super::super::super::data::byte_counts::ByteCounts;
 
@@ -24,11 +35,11 @@ use super::location_and_loc_category::get7ByteRecentPolls;
 use super::location_and_loc_category::get8ByteRecentPolls;
 
 pub fn get_todays_location_category_rankings_by_global_ids(
-    vcDayId: u32,
-    timezoneId: u32,
+    vcDayId: DayId,
+    timezoneId: TimezoneId,
     blockIndex: u32,
-    globalLocationId: u64,
-    globalCategoryId: u64,
+    globalLocationId: LocationId,
+    globalCategoryId: CategoryId,
 ) -> Vec<u8> {
     let currentPeriodIds: cache::CachePeriodIds =
         match cache::PER_TIMEZONE__CACHE_PERIOD_IDS(timezoneId) {
@@ -54,11 +65,11 @@ pub fn get_todays_location_category_rankings_by_global_ids(
 }
 
 pub fn get_todays_location_category_rankings_by_location_cache_index_and_global_category_ids(
-    vcDayId: u32,
-    timezoneId: u32,
+    vcDayId: DayId,
+    timezoneId: TimezoneId,
     blockIndex: u32,
-    locationCacheIndex: u32,
-    globalCategoryId: u64,
+    locationCacheIndex: LocationCacheIndex,
+    globalCategoryId: CategoryId,
 ) -> Vec<u8> {
     let currentPeriodIds: cache::CachePeriodIds =
         match cache::PER_TIMEZONE__CACHE_PERIOD_IDS(timezoneId) {
@@ -84,11 +95,11 @@ pub fn get_todays_location_category_rankings_by_location_cache_index_and_global_
 }
 
 pub fn get_todays_location_category_rankings_by_cache_indexes(
-    vcDayId: u32,
-    timezoneId: u32,
+    vcDayId: DayId,
+    timezoneId: TimezoneId,
     blockIndex: u32,
-    locationCacheIndex: u32,
-    locationCategoryCacheIndex: u32,
+    locationCacheIndex: LocationCacheIndex,
+    locationCategoryCacheIndex: LocationCategoryCacheIndex,
 ) -> Vec<u8> {
     let currentPeriodIds: cache::CachePeriodIds =
         match cache::PER_TIMEZONE__CACHE_PERIOD_IDS(timezoneId) {
@@ -113,11 +124,11 @@ pub fn get_todays_location_category_rankings_by_cache_indexes(
 }
 
 pub fn get_yesterdays_location_category_rankings_by_global_ids(
-    vcDayId: u32,
-    timezoneId: u32,
+    vcDayId: DayId,
+    timezoneId: TimezoneId,
     blockIndex: u32,
-    globalLocationId: u64,
-    globalCategoryId: u64,
+    globalLocationId: LocationId,
+    globalCategoryId: CategoryId,
 ) -> Vec<u8> {
     let currentPeriodIds: cache::CachePeriodIds =
         match cache::PER_TIMEZONE__CACHE_PERIOD_IDS(timezoneId) {
@@ -143,11 +154,11 @@ pub fn get_yesterdays_location_category_rankings_by_global_ids(
 }
 
 pub fn get_yesterdays_location_category_rankings_by_location_cache_index_and_global_category_ids(
-    vcDayId: u32,
-    timezoneId: u32,
+    vcDayId: DayId,
+    timezoneId: TimezoneId,
     blockIndex: u32,
-    locationCacheIndex: u32,
-    globalCategoryId: u64,
+    locationCacheIndex: LocationCacheIndex,
+    globalCategoryId: CategoryId,
 ) -> Vec<u8> {
     let currentPeriodIds: cache::CachePeriodIds =
         match cache::PER_TIMEZONE__CACHE_PERIOD_IDS(timezoneId) {
@@ -173,11 +184,11 @@ pub fn get_yesterdays_location_category_rankings_by_location_cache_index_and_glo
 }
 
 pub fn get_yesterdays_location_category_rankings_by_cache_indexes(
-    vcDayId: u32,
-    timezoneId: u32,
+    vcDayId: DayId,
+    timezoneId: TimezoneId,
     blockIndex: u32,
-    locationCacheIndex: u32,
-    locationCategoryCacheIndex: u32,
+    locationCacheIndex: LocationCacheIndex,
+    locationCategoryCacheIndex: LocationCategoryCacheIndex,
 ) -> Vec<u8> {
     let currentPeriodIds: cache::CachePeriodIds =
         match cache::PER_TIMEZONE__CACHE_PERIOD_IDS(timezoneId) {
@@ -202,11 +213,11 @@ pub fn get_yesterdays_location_category_rankings_by_cache_indexes(
 }
 
 pub fn get_day_b4_yesterdays_location_category_rankings_by_global_ids(
-    vcDayId: u32,
-    timezoneId: u32,
+    vcDayId: DayId,
+    timezoneId: TimezoneId,
     blockIndex: u32,
-    globalLocationId: u64,
-    globalCategoryId: u64,
+    globalLocationId: LocationId,
+    globalCategoryId: CategoryId,
 ) -> Vec<u8> {
     let currentPeriodIds: cache::CachePeriodIds =
         match cache::PER_TIMEZONE__CACHE_PERIOD_IDS(timezoneId) {
@@ -231,11 +242,11 @@ pub fn get_day_b4_yesterdays_location_category_rankings_by_global_ids(
     );
 }
 pub fn get_day_b4_yesterdays_location_category_rankings_by_location_cache_index_and_global_category_ids(
-    vcDayId: u32,
-    timezoneId: u32,
+    vcDayId: DayId,
+    timezoneId: TimezoneId,
     blockIndex: u32,
-    locationCacheIndex: u32,
-    globalCategoryId: u64,
+    locationCacheIndex: LocationCacheIndex,
+    globalCategoryId: CategoryId,
 ) -> Vec<u8> {
     let currentPeriodIds: cache::CachePeriodIds =
         match cache::PER_TIMEZONE__CACHE_PERIOD_IDS(timezoneId) {
@@ -261,11 +272,11 @@ pub fn get_day_b4_yesterdays_location_category_rankings_by_location_cache_index_
 }
 
 pub fn get_day_b4_yesterdays_location_category_rankings_by_cache_indexes(
-    vcDayId: u32,
-    timezoneId: u32,
+    vcDayId: DayId,
+    timezoneId: TimezoneId,
     blockIndex: u32,
-    locationCacheIndex: u32,
-    locationCategoryCacheIndex: u32,
+    locationCacheIndex: LocationCacheIndex,
+    locationCategoryCacheIndex: LocationCategoryCacheIndex,
 ) -> Vec<u8> {
     let currentPeriodIds: cache::CachePeriodIds =
         match cache::PER_TIMEZONE__CACHE_PERIOD_IDS(timezoneId) {
@@ -290,11 +301,11 @@ pub fn get_day_b4_yesterdays_location_category_rankings_by_cache_indexes(
 }
 
 pub fn get_this_weeks_location_category_rankings_by_global_ids(
-    vcWeekId: u32,
-    timezoneId: u32,
+    vcWeekId: WeekId,
+    timezoneId: TimezoneId,
     blockIndex: u32,
-    globalLocationId: u64,
-    globalCategoryId: u64,
+    globalLocationId: LocationId,
+    globalCategoryId: CategoryId,
 ) -> Vec<u8> {
     let currentPeriodIds: cache::CachePeriodIds =
         match cache::PER_TIMEZONE__CACHE_PERIOD_IDS(timezoneId) {
@@ -320,11 +331,11 @@ pub fn get_this_weeks_location_category_rankings_by_global_ids(
 }
 
 pub fn get_this_weeks_location_category_rankings_by_location_cache_index_and_global_category_ids(
-    vcWeekId: u32,
-    timezoneId: u32,
+    vcWeekId: WeekId,
+    timezoneId: TimezoneId,
     blockIndex: u32,
-    locationCacheIndex: u32,
-    globalCategoryId: u64,
+    locationCacheIndex: LocationCacheIndex,
+    globalCategoryId: CategoryId,
 ) -> Vec<u8> {
     let currentPeriodIds: cache::CachePeriodIds =
         match cache::PER_TIMEZONE__CACHE_PERIOD_IDS(timezoneId) {
@@ -350,11 +361,11 @@ pub fn get_this_weeks_location_category_rankings_by_location_cache_index_and_glo
 }
 
 pub fn get_this_weeks_location_category_rankings_by_cache_indexes(
-    vcWeekId: u32,
-    timezoneId: u32,
+    vcWeekId: WeekId,
+    timezoneId: TimezoneId,
     blockIndex: u32,
-    locationCacheIndex: u32,
-    locationCategoryCacheIndex: u32,
+    locationCacheIndex: LocationCacheIndex,
+    locationCategoryCacheIndex: LocationCategoryCacheIndex,
 ) -> Vec<u8> {
     let currentPeriodIds: cache::CachePeriodIds =
         match cache::PER_TIMEZONE__CACHE_PERIOD_IDS(timezoneId) {
@@ -379,11 +390,11 @@ pub fn get_this_weeks_location_category_rankings_by_cache_indexes(
 }
 
 pub fn get_last_weeks_location_category_rankings_by_global_ids(
-    vcWeekId: u32,
-    timezoneId: u32,
+    vcWeekId: WeekId,
+    timezoneId: TimezoneId,
     blockIndex: u32,
-    globalLocationId: u64,
-    globalCategoryId: u64,
+    globalLocationId: LocationId,
+    globalCategoryId: CategoryId,
 ) -> Vec<u8> {
     let currentPeriodIds: cache::CachePeriodIds =
         match cache::PER_TIMEZONE__CACHE_PERIOD_IDS(timezoneId) {
@@ -409,11 +420,11 @@ pub fn get_last_weeks_location_category_rankings_by_global_ids(
 }
 
 pub fn get_last_weeks_location_category_rankings_by_location_cache_index_and_global_category_ids(
-    vcWeekId: u32,
-    timezoneId: u32,
+    vcWeekId: WeekId,
+    timezoneId: TimezoneId,
     blockIndex: u32,
-    locationCacheIndex: u32,
-    globalCategoryId: u64,
+    locationCacheIndex: LocationCacheIndex,
+    globalCategoryId: CategoryId,
 ) -> Vec<u8> {
     let currentPeriodIds: cache::CachePeriodIds =
         match cache::PER_TIMEZONE__CACHE_PERIOD_IDS(timezoneId) {
@@ -439,11 +450,11 @@ pub fn get_last_weeks_location_category_rankings_by_location_cache_index_and_glo
 }
 
 pub fn get_last_weeks_location_category_rankings_by_cache_indexes(
-    vcWeekId: u32,
-    timezoneId: u32,
+    vcWeekId: WeekId,
+    timezoneId: TimezoneId,
     blockIndex: u32,
-    locationCacheIndex: u32,
-    locationCategoryCacheIndex: u32,
+    locationCacheIndex: LocationCacheIndex,
+    locationCategoryCacheIndex: LocationCategoryCacheIndex,
 ) -> Vec<u8> {
     let currentPeriodIds: cache::CachePeriodIds =
         match cache::PER_TIMEZONE__CACHE_PERIOD_IDS(timezoneId) {
@@ -468,11 +479,11 @@ pub fn get_last_weeks_location_category_rankings_by_cache_indexes(
 }
 
 pub fn get_this_months_location_category_rankings_by_global_ids(
-    vcMonthId: u32,
-    timezoneId: u32,
+    vcMonthId: MonthId,
+    timezoneId: TimezoneId,
     blockIndex: u32,
-    globalLocationId: u64,
-    globalCategoryId: u64,
+    globalLocationId: LocationId,
+    globalCategoryId: CategoryId,
 ) -> Vec<u8> {
     let currentPeriodIds: cache::CachePeriodIds =
         match cache::PER_TIMEZONE__CACHE_PERIOD_IDS(timezoneId) {
@@ -498,11 +509,11 @@ pub fn get_this_months_location_category_rankings_by_global_ids(
 }
 
 pub fn get_this_months_location_category_rankings_by_location_cache_index_and_global_category_ids(
-    vcMonthId: u32,
-    timezoneId: u32,
+    vcMonthId: MonthId,
+    timezoneId: TimezoneId,
     blockIndex: u32,
-    locationCacheIndex: u32,
-    globalCategoryId: u64,
+    locationCacheIndex: LocationCacheIndex,
+    globalCategoryId: CategoryId,
 ) -> Vec<u8> {
     let currentPeriodIds: cache::CachePeriodIds =
         match cache::PER_TIMEZONE__CACHE_PERIOD_IDS(timezoneId) {
@@ -528,10 +539,10 @@ pub fn get_this_months_location_category_rankings_by_location_cache_index_and_gl
 }
 
 pub fn get_this_months_location_category_rankings_by_cache_indexes(
-    vcMonthId: u32,
-    timezoneId: u32,
+    vcMonthId: MonthId,
+    timezoneId: TimezoneId,
     blockIndex: u32,
-    locationCacheIndex: u32,
+    locationCacheIndex: LocationCacheIndex,
     locationCategoryCacheIndex: u32,
 ) -> Vec<u8> {
     let currentPeriodIds: cache::CachePeriodIds =
@@ -557,11 +568,11 @@ pub fn get_this_months_location_category_rankings_by_cache_indexes(
 }
 
 pub fn get_last_months_location_category_rankings_by_global_ids(
-    vcMonthId: u32,
-    timezoneId: u32,
+    vcMonthId: MonthId,
+    timezoneId: TimezoneId,
     blockIndex: u32,
-    globalLocationId: u64,
-    globalCategoryId: u64,
+    globalLocationId: LocationId,
+    globalCategoryId: CategoryId,
 ) -> Vec<u8> {
     let currentPeriodIds: cache::CachePeriodIds =
         match cache::PER_TIMEZONE__CACHE_PERIOD_IDS(timezoneId) {
@@ -587,11 +598,11 @@ pub fn get_last_months_location_category_rankings_by_global_ids(
 }
 
 pub fn get_last_months_location_category_rankings_by_location_cache_index_and_global_category_ids(
-    vcMonthId: u32,
-    timezoneId: u32,
+    vcMonthId: MonthId,
+    timezoneId: TimezoneId,
     blockIndex: u32,
-    locationCacheIndex: u32,
-    globalCategoryId: u64,
+    locationCacheIndex: LocationCacheIndex,
+    globalCategoryId: CategoryId,
 ) -> Vec<u8> {
     let currentPeriodIds: cache::CachePeriodIds =
         match cache::PER_TIMEZONE__CACHE_PERIOD_IDS(timezoneId) {
@@ -617,11 +628,11 @@ pub fn get_last_months_location_category_rankings_by_location_cache_index_and_gl
 }
 
 pub fn get_last_months_location_category_rankings_by_cache_indexes(
-    vcMonthId: u32,
-    timezoneId: u32,
+    vcMonthId: MonthId,
+    timezoneId: TimezoneId,
     blockIndex: u32,
-    locationCacheIndex: u32,
-    locationCategoryCacheIndex: u32,
+    locationCacheIndex: LocationCacheIndex,
+    locationCategoryCacheIndex: LocationCategoryCacheIndex,
 ) -> Vec<u8> {
     let currentPeriodIds: cache::CachePeriodIds =
         match cache::PER_TIMEZONE__CACHE_PERIOD_IDS(timezoneId) {
@@ -649,11 +660,11 @@ pub fn get_last_months_location_category_rankings_by_cache_indexes(
 fn get_location_category_rankings_by_global_ids(
     currentPeriodId: u32,
     expectedPeriodId: u32,
-    timezoneId: u32,
-    locationIndexMap: IntHashMap<u64, cache::LocationPeriodIds>,
+    timezoneId: TimezoneId,
+    locationIndexMap: IntHashMap<LocationId, cache::LocationPeriodIds>,
     givenPeriodLocationPollRankings: Vec<Vec<LocationPollRankings>>,
-    globalLocationId: u64,
-    globalCategoryId: u64,
+    globalLocationId: LocationId,
+    globalCategoryId: CategoryId,
     blockIndex: u32,
     maxPollNumberBytes: u8,
 ) -> Vec<u8> {
@@ -670,7 +681,7 @@ fn get_location_category_rankings_by_global_ids(
         }
     };
 
-    let locationCategoryCacheIndex: u32 = match locationPeriodIds
+    let locationCategoryCacheIndex: LocationCategoryCacheIndex = match locationPeriodIds
         .locationCategoryCacheIndexMap.get(*globalCategoryId) {
         None => {
             return codes::INVALID_GLOBAL_CATEGORY_ID_RESPONSE;
@@ -681,7 +692,7 @@ fn get_location_category_rankings_by_global_ids(
     };
 
 
-    let locationCacheIndex: u32 = locationPeriodIds.locationCacheIndex;
+    let locationCacheIndex: LocationCacheIndex = locationPeriodIds.locationCacheIndex;
     let locationPollRankings = givenPeriodLocationPollRankings[timezoneId][locationCacheIndex];
     let firstRecordIndex = PAGE_SIZE * blockIndex;
 
@@ -694,11 +705,11 @@ fn get_location_category_rankings_by_global_ids(
 fn get_location_category_rankings_by_location_cache_index_and_global_category_id(
     currentPeriodId: u32,
     expectedPeriodId: u32,
-    timezoneId: u32,
-    locationCategoryIndexMap: IntHashMap<u32, cache::LocationPeriodIds>,
+    timezoneId: TimezoneId,
+    locationCategoryIndexMap: IntHashMap<LocationId, cache::LocationPeriodIds>,
     givenPeriodLocationPollRankings: Vec<Vec<LocationPollRankings>>,
-    locationCacheIndex: u32,
-    globalCategoryId: u64,
+    locationCacheIndex: LocationCacheIndex,
+    globalCategoryId: CategoryId,
     blockIndex: u32,
     maxPollNumberBytes: u8,
 ) -> Vec<u8> {
@@ -741,10 +752,10 @@ fn get_location_category_rankings_by_location_cache_index_and_global_category_id
 fn get_location_category_rankings_by_cache_indexes(
     currentPeriodId: u32,
     expectedPeriodId: u32,
-    timezoneId: u32,
+    timezoneId: TimezoneId,
     givenPeriodLocationPollRankings: Vec<Vec<LocationPollRankings>>,
-    locationCacheIndex: u32,
-    locationCategoryCacheIndex: u32,
+    locationCacheIndex: LocationCacheIndex,
+    locationCategoryCacheIndex: LocationCategoryCacheIndex,
     blockIndex: u32,
     maxPollNumberBytes: u8,
 ) -> Vec<u8> {
@@ -780,10 +791,10 @@ fn get_location_category_rankings_by_cache_indexes(
 
 #[inline]
 fn get_location_category_rankings_with_cache_indexes(
-    timezoneId: u32,
+    timezoneId: TimezoneId,
     firstRecordIndex: usize,
-    locationCacheIndex: u32,
-    categoryCacheIndex: u32,
+    locationCacheIndex: LocationCacheIndex,
+    categoryCacheIndex: CategoryCacheIndex,
     locationPollRankings: LocationPollRankings,
     maxPollNumberBytes: u8,
 ) -> Vec<u8> {
@@ -859,10 +870,10 @@ fn get_location_category_rankings_with_cache_indexes(
 
 #[inline]
 fn get_location_category_rankings_with_category_cache_index(
-    timezoneId: u32,
+    timezoneId: TimezoneId,
     firstRecordIndex: usize,
-    locationCacheIndex: u32,
-    categoryCacheIndex: u32,
+    locationCacheIndex: LocationCacheIndex,
+    categoryCacheIndex: CategoryCacheIndex,
     locationPollRankings: LocationPollRankings,
     maxPollNumberBytes: u8,
 ) -> Vec<u8> {

@@ -2,8 +2,13 @@ use std::mem::transmute;
 use int_hash::IntHashMap;
 
 use super::super::super::super::cache::cache;
-use super::super::super::super::cache::cache::VoteCount;
+use super::super::super::super::cache::cache::CategoryCacheIndex;
+use super::super::super::super::cache::cache::CategoryId;
 use super::super::super::super::cache::cache::CategoryPeriodPollRankings;
+use super::super::super::super::cache::cache::DayId;
+use super::super::super::super::cache::cache::MonthId;
+use super::super::super::super::cache::cache::VoteCount;
+use super::super::super::super::cache::cache::WeekId;
 use super::super::super::super::server::codes;
 use super::super::super::super::data::byte_counts::ByteCounts;
 
@@ -100,9 +105,9 @@ const INITIAL_RESPONSE_VECTOR_SIZE_2_POLL_BYTES: usize =
         2;
 
 pub fn get_todays_category_rankings_by_global_id(
-    vcDayId: u32,
+    vcDayId: DayId,
     blockIndex: u32,
-    globalCategoryId: u64,
+    globalCategoryId: CategoryId,
 ) -> Vec<u8> {
     return get_category_rankings_by_global_id(
         cache::CATEGORY_CACHE_PERIOD_IDS.todaysVcDayId,
@@ -116,9 +121,9 @@ pub fn get_todays_category_rankings_by_global_id(
 }
 
 pub fn get_todays_category_rankings_by_cache_index(
-    vcDayId: u32,
+    vcDayId: DayId,
     blockIndex: u32,
-    categoryCacheIndex: u32,
+    categoryCacheIndex: CategoryCacheIndex,
 ) -> Vec<u8> {
     return get_category_rankings_by_cache_index(
         cache::CATEGORY_CACHE_PERIOD_IDS.todaysVcDayId,
@@ -131,9 +136,9 @@ pub fn get_todays_category_rankings_by_cache_index(
 }
 
 pub fn get_yesterdays_category_rankings_by_global_id(
-    vcDayId: u32,
+    vcDayId: DayId,
     blockIndex: u32,
-    globalCategoryId: u64,
+    globalCategoryId: CategoryId,
 ) -> Vec<u8> {
     return get_category_rankings_by_global_id(
         cache::CATEGORY_CACHE_PERIOD_IDS.yesterdaysVcDayId,
@@ -147,9 +152,9 @@ pub fn get_yesterdays_category_rankings_by_global_id(
 }
 
 pub fn get_yesterdays_category_rankings_by_cache_index(
-    vcDayId: u32,
+    vcDayId: DayId,
     blockIndex: u32,
-    categoryCacheIndex: u32,
+    categoryCacheIndex: CategoryCacheIndex,
 ) -> Vec<u8> {
     return get_category_rankings_by_cache_index(
         cache::CATEGORY_CACHE_PERIOD_IDS.yesterdaysVcDayId,
@@ -162,9 +167,9 @@ pub fn get_yesterdays_category_rankings_by_cache_index(
 }
 
 pub fn get_day_b4_yesterdays_category_rankings_by_global_id(
-    vcDayId: u32,
+    vcDayId: DayId,
     blockIndex: u32,
-    globalCategoryId: u64,
+    globalCategoryId: CategoryId,
 ) -> Vec<u8> {
     return get_category_rankings_by_global_id(
         cache::CATEGORY_CACHE_PERIOD_IDS.dayB4YesterdaysVcDayId,
@@ -178,9 +183,9 @@ pub fn get_day_b4_yesterdays_category_rankings_by_global_id(
 }
 
 pub fn get_day_b4_yesterdays_category_rankings_by_cache_index(
-    vcDayId: u32,
+    vcDayId: DayId,
     blockIndex: u32,
-    categoryCacheIndex: u32,
+    categoryCacheIndex: CategoryCacheIndex,
 ) -> Vec<u8> {
     return get_category_rankings_by_cache_index(
         cache::CATEGORY_CACHE_PERIOD_IDS.dayB4YesterdaysVcDayId,
@@ -193,9 +198,9 @@ pub fn get_day_b4_yesterdays_category_rankings_by_cache_index(
 }
 
 pub fn get_this_weeks_category_rankings_by_global_id(
-    vcWeekId: u32,
+    vcWeekId: WeekId,
     blockIndex: u32,
-    globalCategoryId: u64,
+    globalCategoryId: CategoryId,
 ) -> Vec<u8> {
     return get_category_rankings_by_global_id(
         cache::CATEGORY_CACHE_PERIOD_IDS.thisWeeksVcWeekId,
@@ -209,9 +214,9 @@ pub fn get_this_weeks_category_rankings_by_global_id(
 }
 
 pub fn get_this_weeks_category_rankings_by_cache_index(
-    vcWeekId: u32,
+    vcWeekId: WeekId,
     blockIndex: u32,
-    categoryCacheIndex: u32,
+    categoryCacheIndex: CategoryCacheIndex,
 ) -> Vec<u8> {
     return get_category_rankings_by_cache_index(
         cache::CATEGORY_CACHE_PERIOD_IDS.thisWeeksVcWeekId,
@@ -224,9 +229,9 @@ pub fn get_this_weeks_category_rankings_by_cache_index(
 }
 
 pub fn get_last_weeks_category_rankings_by_global_id(
-    vcWeekId: u32,
+    vcWeekId: WeekId,
     blockIndex: u32,
-    globalCategoryId: u64,
+    globalCategoryId: CategoryId,
 ) -> Vec<u8> {
     return get_category_rankings_by_global_id(
         cache::CATEGORY_CACHE_PERIOD_IDS.lastWeeksVcWeekId,
@@ -240,9 +245,9 @@ pub fn get_last_weeks_category_rankings_by_global_id(
 }
 
 pub fn get_last_weeks_category_rankings_by_cache_index(
-    vcWeekId: u32,
+    vcWeekId: WeekId,
     blockIndex: u32,
-    categoryCacheIndex: u32,
+    categoryCacheIndex: CategoryCacheIndex,
 ) -> Vec<u8> {
     return get_category_rankings_by_cache_index(
         cache::CATEGORY_CACHE_PERIOD_IDS.lastWeeksVcWeekId,
@@ -255,9 +260,9 @@ pub fn get_last_weeks_category_rankings_by_cache_index(
 }
 
 pub fn get_this_months_category_rankings_by_global_id(
-    vcMonthId: u32,
+    vcMonthId: MonthId,
     blockIndex: u32,
-    globalCategoryId: u64,
+    globalCategoryId: CategoryId,
 ) -> Vec<u8> {
     return get_category_rankings_by_global_id(
         cache::CATEGORY_CACHE_PERIOD_IDS.thisMonthsVcMonthId,
@@ -271,9 +276,9 @@ pub fn get_this_months_category_rankings_by_global_id(
 }
 
 pub fn get_this_months_category_rankings_by_cache_index(
-    vcMonthId: u32,
+    vcMonthId: MonthId,
     blockIndex: u32,
-    categoryCacheIndex: u32,
+    categoryCacheIndex: CategoryCacheIndex,
 ) -> Vec<u8> {
     return get_category_rankings_by_cache_index(
         cache::CATEGORY_CACHE_PERIOD_IDS.thisMonthsVcMonthId,
@@ -286,9 +291,9 @@ pub fn get_this_months_category_rankings_by_cache_index(
 }
 
 pub fn get_last_months_category_rankings_by_global_id(
-    vcMonthId: u32,
+    vcMonthId: MonthId,
     blockIndex: u32,
-    globalCategoryId: u64,
+    globalCategoryId: CategoryId,
 ) -> Vec<u8> {
     return get_category_rankings_by_global_id(
         cache::CATEGORY_CACHE_PERIOD_IDS.lastMonthsVcMonthId,
@@ -302,9 +307,9 @@ pub fn get_last_months_category_rankings_by_global_id(
 }
 
 pub fn get_last_months_category_rankings_by_cache_index(
-    vcMonthId: u32,
+    vcMonthId: MonthId,
     blockIndex: u32,
-    categoryCacheIndex: u32,
+    categoryCacheIndex: CategoryCacheIndex,
 ) -> Vec<u8> {
     return get_category_rankings_by_cache_index(
         cache::CATEGORY_CACHE_PERIOD_IDS.lastMonthsVcMonthId,
@@ -319,9 +324,9 @@ pub fn get_last_months_category_rankings_by_cache_index(
 fn get_category_rankings_by_global_id(
     currentPeriodId: u32,
     expectedPeriodId: u32,
-    categoryIndexMap: IntHashMap<u64, u32>,
+    categoryIndexMap: IntHashMap<CategoryId, CategoryCacheIndex>,
     givenPeriodCategoryPollRankings: Vec<Vec<VoteCount>>,
-    globalCategoryId: u64,
+    globalCategoryId: CategoryId,
     blockIndex: u32,
     maxPollNumberBytes: u8,
 ) -> Vec<u8> {
@@ -347,7 +352,7 @@ fn get_category_rankings_by_cache_index(
     currentPeriodId: u32,
     expectedPeriodId: u32,
     givenPeriodCategoryPollRankings: Vec<Vec<VoteCount>>,
-    categoryCacheIndex: u32,
+    categoryCacheIndex: CategoryCacheIndex,
     blockIndex: u32,
     maxPollNumberBytes: u8,
 ) -> Vec<u8> {
@@ -372,7 +377,7 @@ fn get_category_rankings_by_cache_index(
 #[inline]
 fn get_category_rankings_with_category_cache_index(
     firstRecordIndex: usize,
-    categoryCacheIndex: u32,
+    categoryCacheIndex: CategoryCacheIndex,
     givenPeriodCategoryPollRankings: Vec<Vec<VoteCount>>,
     maxPollNumberBytes: u8,
 ) -> Vec<u8> {
@@ -439,11 +444,11 @@ fn get_category_rankings_with_category_cache_index(
 #[inline]
 fn get_category_rankings(
     firstRecordIndex: usize,
-    categoryIndex: u32,
+    categoryCacheIndex: CategoryCacheIndex,
     givenPeriodCategoryPollRankings: Vec<Vec<VoteCount>>,
     maxPollNumberBytes: u8,
 ) -> Vec<u8> {
-    let voteCountsForCategory = givenPeriodCategoryPollRankings[categoryIndex];
+    let voteCountsForCategory = givenPeriodCategoryPollRankings[categoryCacheIndex];
 
     match maxPollNumberBytes {
         3 => {
