@@ -12,7 +12,6 @@ use super::super::super::cache::cache::TimezoneId;
 use super::super::super::cache::cache::WeekId;
 
 
-
 /**
  *
  *  Entering polls early - not needed for Minimum Viable Product.
@@ -28,33 +27,46 @@ use super::super::super::cache::cache::WeekId;
  */
 pub fn add_polls(
     rawData: &[u8]
-) {
+) {}
 
-}
-
-fn add_day_poll(
+fn add_day_after_tomorrows_poll(
     vcDayId: DayId,
-    globalPollId: PollId,
+    timezoneId: TimezoneId,
     globalLocationId: LocationId,
     globalCategoryIds: Vec<u64>,
+    globalPollId: PollId,
 ) {
-    
+    let data: IntHashMap<LocationId, LocationPollPrependLists>
+    = cache::DAY_AFTER_TOMORROWS_POLLS_BY_LOCATION.get(timezoneId).unwrap();
+
+    if data.len() == data.capacity() {
+        data.reserve(20);
+
+    }
 }
+
+fn grow
+
+fn add_tomorrows_poll(
+    vcDayId: DayId,
+    timezoneId: TimezoneId,
+    globalLocationId: LocationId,
+    globalCategoryIds: Vec<u64>,
+    globalPollId: PollId,
+) {}
 
 fn add_week_poll(
     vcWeekId: WeekId,
-    globalPollId: PollId,
+    timezoneId: TimezoneId,
     globalLocationId: LocationId,
     globalCategoryIds: Vec<u64>,
-) {
-
-}
+    globalPollId: PollId,
+) {}
 
 fn add_month_poll(
     vcMonthId: MonthId,
-    globalPollId: PollId,
+    timezoneId: TimezoneId,
     globalLocationId: LocationId,
     globalCategoryIds: Vec<u64>,
-) {
-
-}
+    globalPollId: PollId,
+) {}
